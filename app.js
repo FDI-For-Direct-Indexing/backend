@@ -7,6 +7,10 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
+const bodyParser = require("body-parser");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+
 require("dotenv").config();
 const { PORT, MONGO_URI } = process.env;
 
@@ -32,8 +36,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "몽키랭키 API",
+      version: "1.0.0",
+      description: "오공의 몽키랭키 API 문서입니다.",
+    },
+    servers: [
+      {
+        url: "http://localhost:5000/",
+      },
+    ],
+  },
+  apis: ["./models/*.js", "./routes/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
