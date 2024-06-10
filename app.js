@@ -5,7 +5,9 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var stocksRouter = require("./routes/stocks");
+const clusterRouter = require("./routes/cluster");
+const postsRouter = require("./routes/posts");
 
 const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
@@ -56,7 +58,9 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/stocks", stocksRouter);
+app.use("/cluster", clusterRouter);
+app.use("/posts", postsRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
