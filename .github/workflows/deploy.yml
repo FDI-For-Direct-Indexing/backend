@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
-          script:
+          script: |
             cd /home/ubuntu/Server-V2
             git pull origin main
             pm2 kill
