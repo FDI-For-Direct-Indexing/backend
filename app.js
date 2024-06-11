@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var stocksRouter = require("./routes/stocks");
@@ -14,6 +15,19 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
 require("dotenv").config();
+
+const whitelist = ["http://localhost:3000"];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Not Allowed Origin!`));
+    }
+  },
+};
+
 const { PORT, MONGO_URI } = process.env;
 
 const port = PORT || 4000;
@@ -27,7 +41,7 @@ mongoose
   .catch((e) => console.log(e));
 
 var app = express();
-
+app.use(cors(corsOptions));
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'ejs');
@@ -57,10 +71,10 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-app.use("/", indexRouter);
-app.use("/stocks", stocksRouter);
-app.use("/cluster", clusterRouter);
-app.use("/posts", postsRouter);
+app.use("/api", indexRouter);
+app.use("/api/stocks", stocksRouter);
+app.use("/api/cluster", clusterRouter);
+app.use("/api/posts", postsRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
@@ -78,6 +92,10 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on ${port}`);
 });
 
 module.exports = app;
