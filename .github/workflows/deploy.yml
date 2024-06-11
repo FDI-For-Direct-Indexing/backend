@@ -1,4 +1,4 @@
-name: dev branch auto ci process script
+name: ogong-deploy
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script:
             cd /home/ubuntu/Server-V2
-            git pull origin dev
+            git pull origin main
             pm2 kill
             npm i --force
             npm run build
