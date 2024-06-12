@@ -71,63 +71,59 @@ const { mongo, default: mongoose } = require("mongoose");
 
 const StockSchema = new mongoose.Schema(
   {
-    code: {
-      type: Number,
-      required: true,
-    },
-    name: {
+    stock: {
       type: String,
       required: true,
     },
-    return_on_equity: {
+    ogong_rate: {
       type: Number,
       required: false,
     },
-    gross_profit_margin: {
+    pro_roe: {
       type: Number,
       required: false,
     },
-    net_profit_margin: {
+    pro_operating_profit_margin: {
       type: Number,
       required: false,
     },
-    debt_to_equity_ratio: {
+    pro_net_profit_margin: {
       type: Number,
       required: false,
     },
-    quick_ratio: {
+    gro_inventory_turnover_period: {
       type: Number,
       required: false,
     },
-    current_ratio: {
+    gro_is_net_income_yoy: {
       type: Number,
       required: false,
     },
-    equity_ratio: {
+    gro_is_operatingprofit_loss_yoy: {
       type: Number,
       required: false,
     },
-    interest_coverage_ratio: {
+    gro_is_reveneue_yoy: {
       type: Number,
       required: false,
     },
-    asset_turnover_ratio: {
+    sta_debt_ratio: {
       type: Number,
       required: false,
     },
-    inventory_turnover_ratio: {
+    sta_current_ratio: {
       type: Number,
       required: false,
     },
-    accounts_receivable_turnover_ratio: {
+    eff_inventory_turnover_period: {
       type: Number,
       required: false,
     },
-    sales_growth_rate: {
+    eff_payables_turnover_period: {
       type: Number,
       required: false,
     },
-    profit_growth_rate: {
+    eff_receivables_turnover_period: {
       type: Number,
       required: false,
     },
@@ -135,14 +131,12 @@ const StockSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
-    ogong_rate: {
-      type: Number,
-      required: true,
-    },
-    post: {
+    
+    corporate_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
+      ref: "Corporate",
     },
+
   },
   {
     timestamps: true,

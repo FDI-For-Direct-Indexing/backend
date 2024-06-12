@@ -22,6 +22,10 @@ const PostSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    corporate_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Corporate",
+    },
   },
   { timestamps: true }
 );
