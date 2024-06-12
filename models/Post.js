@@ -1,16 +1,4 @@
-/**
- * @swagger
- * components:
- *  schemas:
- *   Post:
- *    properties:
- *      content:
- *        type: string
- *        description: 게시글 내용
- *      created_date:
- *        type: string
- *        description: 게시글 작성일
- */
+const { mongo, default: mongoose } = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
   {

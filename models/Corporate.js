@@ -1,7 +1,9 @@
-const StockSchema = new mongoose.Schema(
+const { mongo, default: mongoose } = require("mongoose");
+
+const CorporateSchema = new mongoose.Schema(
   {
     code: {
-      type: Number,
+      type: String,
       required: true,
     },
     name: {
@@ -35,6 +37,6 @@ const StockSchema = new mongoose.Schema(
   }
 );
 
-const Stock = mongoose.model("Stock", StockSchema);
+const Corporate = mongoose.model("Corporate", CorporateSchema);
 
-module.exports = Stock;
+module.exports = Corporate;
