@@ -1,19 +1,16 @@
 var express = require("express");
-const stocks = require("../service/stocksDetail");
-var router = express.Router();
+const router = express.Router();
+const stocks = require("../service/stocks");
 
-/**
- * 수익성: proTotalproROE, proTotalproOperatingProfitMargin, prototalproNetProfitMargin
- * 성장성: groTotalInventoryTurnoverPeriod, groTotalisNetIncomeYoY, groTotalisOperatingProfitLossYoY, groTotalisReveneueYoY
- * 안정성: saAverageStaDebtRatio, saAverageStaCurrentRatio
- * 효율성: effInventoryTurnoverPeriod, effPayablesTurnoverPeriod, effReceivablesTurnoverPeriod
- */
 
-/* GET stock */
-router.get("/:code", function (req, res, next) {
-  console.log(req.params);
+router.get("/search/:keyword", async function (req, res, next) {
+  const keyword = req.params.keyword;
+  return res.json(await stocks.searchCorporate(keyword));
+});
 
-  return res.json(stocks.getStockFundamentals(req.params.code));
+router.get("/include/:keyword", async function (req, res, next) {
+  const keyword = req.params.keyword;
+  return res.json(await stocks.searchIncludedCorporate(keyword));
 });
 
 module.exports = router;

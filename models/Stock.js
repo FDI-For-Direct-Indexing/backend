@@ -1,4 +1,4 @@
-const { mongo, default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 
 const StockSchema = new mongoose.Schema(
@@ -75,7 +75,7 @@ const StockSchema = new mongoose.Schema(
   }
 );
 
-const Stock = mongoose.model("Stock", StockSchema);
+const Stock = mongoose.model("stocks", StockSchema);
 
 module.exports = Stock;
 

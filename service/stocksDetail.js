@@ -3,12 +3,8 @@ const Corporate = require('../models/Corporate');
 
 const getStockFundamentals = async (code) =>{
   try {
-    const corporate = await Corporate.findOne({ code: code }).then((corporate) => {
-      console.log(corporate);
-      return corporate;
-    });
-    console.log(corporate)
-    const stock = await Stock.findOne({ corporate_id: corporate.id });
+    const corporate = await Corporate.findOne({ code: code });
+    const stock = await Stock.findOne({ stock: corporate.code });
     
     const profit_key = ['ROE', '영업이익률', '순이익률'];
     const growth_key = ['자기자본비율', '영업이익', '영업이익률', '매출액'];
@@ -22,26 +18,34 @@ const getStockFundamentals = async (code) =>{
 
     const profit = new Object();
     for (let i = 0; i < profit_key.length; i++) {
-      profit.matrix = profit_key[i];
-      profit.rates = profit_value[i];
+      profit[i] = {
+        matrix: profit_key[i],
+        rates: profit_value[i]
+      };
     }
     
     const growth = new Object();
     for (let i = 0; i < growth_key.length; i++) {
-      growth.matrix = growth_key[i];
-      growth.rates = growth_value[i];
+      growth[i] = {
+        matrix: growth_key[i],
+        rates: growth_value[i]
+      }
     }
 
     const stability = new Object();
     for (let i = 0; i < stability_key.length; i++) {
-      stability.matrix = stability_key[i];
-      stability.rates = stability_value[i];
+      stability[i] = {
+        matrix: stability_key[i],
+        rates: stability_value[i]
+      }
     }
 
     const efficiency = new Object();
     for (let i = 0; i < efficiency_key.length; i++) {
-      efficiency.matrix = efficiency_key[i];
-      efficiency.rates = efficiency_value[i];
+      efficiency[i] = {
+        matrix: efficiency_key[i],
+        rates: efficiency_value[i]
+      }
     }
 
     const result = {
