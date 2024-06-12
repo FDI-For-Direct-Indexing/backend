@@ -1,7 +1,7 @@
 const { mongo, default: mongoose } = require("mongoose");
 
 
-const StockDetailSchema = new mongoose.Schema(
+const StockSchema = new mongoose.Schema(
   {
     stock: {
       type: String,
@@ -75,6 +75,6 @@ const StockDetailSchema = new mongoose.Schema(
   }
 );
 
-const StockDetail = mongoose.model("Stock", StockDetailSchema);
+const Stock = mongoose.model("Stock", StockSchema);
 
-module.exports = StockDetail;
+module.exports = Stock;
