@@ -1,6 +1,6 @@
 const { mongo, default: mongoose } = require("mongoose");
 
-const CorporateFundamentalSchema = new mongoose.Schema(
+const CorporateSchema = new mongoose.Schema(
   {
     code: {
       type: String,
@@ -37,6 +37,6 @@ const CorporateFundamentalSchema = new mongoose.Schema(
   }
 );
 
-const CorporateFundamental = mongoose.model("CorporateFundamental", CorporateFundamentalSchema);
+const Corporate = mongoose.model("Corporate", CorporateSchema);
 
-module.exports = CorporateFundamental;
+module.exports = Corporate;

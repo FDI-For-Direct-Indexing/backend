@@ -66,7 +66,7 @@ const StockDetailSchema = new mongoose.Schema(
     
     corporate_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CorporateFundamental",
+      ref: "Corporate",
     },
 
   },
