@@ -1,4 +1,5 @@
 var express = require("express");
+const stocks = require("../service/stocksDetail");
 var router = express.Router();
 
 /**
@@ -9,8 +10,10 @@ var router = express.Router();
  */
 
 /* GET stock */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
+router.get("/:code", function (req, res, next) {
+  console.log(req.params);
+
+  return res.json(stocks.getStockFundamentals(req.params.code));
 });
 
 module.exports = router;
