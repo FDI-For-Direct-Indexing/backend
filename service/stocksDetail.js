@@ -16,36 +16,36 @@ const getStockFundamentals = async (code) =>{
     const stability_value = [stock.sta_debt_ratio, stock.sta_current_ratio];
     const efficiency_value = [stock.eff_inventory_turnover_period, stock.eff_payables_turnover_period, stock.eff_receivables_turnover_period];
 
-    const profit = new Object();
+    const profit = [];
     for (let i = 0; i < profit_key.length; i++) {
-      profit[i] = {
+      profit.push({
         matrix: profit_key[i],
         rates: profit_value[i]
-      };
+      });
     }
     
-    const growth = new Object();
+    const growth = [];
     for (let i = 0; i < growth_key.length; i++) {
-      growth[i] = {
+      growth.push({
         matrix: growth_key[i],
         rates: growth_value[i]
-      }
+      });
     }
 
-    const stability = new Object();
+    const stability = [];
     for (let i = 0; i < stability_key.length; i++) {
-      stability[i] = {
+      stability.push({
         matrix: stability_key[i],
         rates: stability_value[i]
-      }
+      });
     }
 
-    const efficiency = new Object();
+    const efficiency = [];
     for (let i = 0; i < efficiency_key.length; i++) {
-      efficiency[i] = {
+      efficiency.push({
         matrix: efficiency_key[i],
         rates: efficiency_value[i]
-      }
+      });
     }
 
     const result = {
