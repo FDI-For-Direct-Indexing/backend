@@ -1,4 +1,4 @@
-const { mongo, default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 const CorporateSchema = new mongoose.Schema(
   {
@@ -30,7 +30,6 @@ const CorporateSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
-
   },
   {
     timestamps: true,

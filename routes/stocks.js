@@ -1,5 +1,6 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const stocks = require("../service/stocks");
 
 /**
  * 수익성: proTotalproROE, proTotalproOperatingProfitMargin, prototalproNetProfitMargin
@@ -11,6 +12,16 @@ var router = express.Router();
 /* GET stock */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
+});
+
+router.get("/search/:keyword", async function (req, res, next) {
+  const keyword = req.params.keyword;
+  return res.json(await stocks.searchCorporate(keyword));
+});
+
+router.get("/include/:keyword", async function (req, res, next) {
+  const keyword = req.params.keyword;
+  return res.json(await stocks.searchIncludedCorporate(keyword));
 });
 
 module.exports = router;

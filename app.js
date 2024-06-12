@@ -5,6 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 
+var errorHandler = require("./common/error/ErrorHandler");
 var indexRouter = require("./routes/index");
 var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
@@ -36,8 +37,11 @@ mongoose
   .connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    dbName: "MonkeyRanking",
   })
-  .then(() => console.log("MongoDB connected"))
+  .then(async () => {
+    console.log("MongoDB connected");
+  })
   .catch((e) => console.log(e));
 
 var app = express();
@@ -75,7 +79,7 @@ app.use("/api", indexRouter);
 app.use("/api/stocks", stocksRouter);
 app.use("/api/cluster", clusterRouter);
 app.use("/api/posts", postsRouter);
-
+app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // catch 404 and forward to error handler
