@@ -18,7 +18,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 require("dotenv").config();
 
-const { PORT, MONGO_URI, CLIENT_URL } = process.env;
+const { MONGO_URI, CLIENT_URL } = process.env;
 
 const whitelist = ["http://localhost:3000", CLIENT_URL];
 
@@ -33,7 +33,6 @@ const corsOptions = {
   },
 };
 
-const port = PORT || 4000;
 const mongoose = require("mongoose");
 mongoose
   .connect(MONGO_URI, {
