@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "PORT=$PORT" >> .env
           echo "MONGO_URI=$MONGO_URI" >> .env
-          echo "CLIENT_URL" >> .env
+          echo "CLIENT_URL=$CLIENT_URL" >> .env
         env:
           PORT: ${{ secrets.PORT }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
