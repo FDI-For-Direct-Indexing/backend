@@ -11,14 +11,16 @@ var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
 const postsRouter = require("./routes/posts");
 const stocksDetailRouter = require("./routes/stocksDetail");
+const corporateRouter = require("./routes/corporates");
 
-const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
 require("dotenv").config();
 
-const whitelist = ["http://localhost:3000"];
+const { MONGO_URI, CLIENT_URL } = process.env;
+
+const whitelist = ["http://localhost:3000", CLIENT_URL];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -30,9 +32,6 @@ const corsOptions = {
   },
 };
 
-const { PORT, MONGO_URI } = process.env;
-
-const port = PORT || 4000;
 const mongoose = require("mongoose");
 mongoose
   .connect(MONGO_URI, {
@@ -81,6 +80,7 @@ app.use("/api/stocks", stocksRouter);
 app.use("/api/stocksDetail", stocksDetailRouter);
 app.use("/api/cluster", clusterRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/corporates", corporateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
@@ -95,13 +95,10 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  // res.render("error");
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on ${port}`);
+  // send the error message as JSON
+  res.status(err.status || 500).json({
+    error: err.message,
+  });
 });
 
 module.exports = app;
