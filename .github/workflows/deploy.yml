@@ -50,6 +50,6 @@ jobs:
             nvm use 22.0.0
             npm i --force
             npm run build
-            pm2 start src/app.js
+            pm2 start app.js
 
 
