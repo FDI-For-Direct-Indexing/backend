@@ -10,6 +10,7 @@ var indexRouter = require("./routes/index");
 var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
 const postsRouter = require("./routes/posts");
+const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
 
 const swaggerUi = require("swagger-ui-express");
@@ -76,6 +77,7 @@ const specs = swaggerJsdoc(options);
 
 app.use("/api", indexRouter);
 app.use("/api/stocks", stocksRouter);
+app.use("/api/stocksDetail", stocksDetailRouter);
 app.use("/api/cluster", clusterRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/corporates", corporateRouter);
