@@ -18,7 +18,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 require("dotenv").config();
 
-const whitelist = ["http://localhost:3000", process.env.CLIENT_URL];
+const whitelist = ["http://localhost:3000", CLIENT_URL];
 
 const corsOptions = {
   origin: function (origin, callback) {
