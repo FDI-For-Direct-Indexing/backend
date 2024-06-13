@@ -1,0 +1,45 @@
+name: 새 기능 추가
+description: 프로젝트에 새로운 기능을 추가하기 위한 제안을 해주세요.
+title: "[NEW FEATURE] "
+labels: [feature, new]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: "새로운 기능을 추가하려는 계획을 공유해주셔서 감사합니다! 이 템플릿을 사용하여 계획한 기능에 대한 정보를 제공해 주세요."
+  - type: input
+    id: feature-title
+    attributes:
+      label: 기능 제목
+      description: 추가하려는 기능의 제목을 입력해 주세요.
+      placeholder: "기능의 제목을 입력하세요."
+    validations:
+      required: true
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 기능 설명
+      description: 추가하려는 기능에 대해 자세히 설명해 주세요.
+      placeholder: "기능에 대한 자세한 설명을 입력하세요. 예를 들어, 어떤 문제를 해결하려는지, 기능이 어떻게 동작해야 하는지 등을 포함해 주세요."
+    validations:
+      required: true
+  - type: textarea
+    id: implementation-details
+    attributes:
+      label: 구현 세부사항
+      description: 이 기능을 구현할 때 고려해야 할 기술적 세부사항이나 접근 방식을 설명해 주세요.
+      placeholder: "구현할 때의 기술적 세부사항이나 접근 방식을 설명해 주세요. 사용할 기술, 예상되는 주요 도전 과제 등을 포함할 수 있습니다."
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      description: 이 기능의 개발 우선순위를 설정해 주세요.
+      options:
+        - 낮음
+        - 중간
+        - 높음
+        - 매우 높음
+    validations:
+      required: true
