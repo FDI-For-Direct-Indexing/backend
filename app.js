@@ -10,6 +10,7 @@ var indexRouter = require("./routes/index");
 var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
 const postsRouter = require("./routes/posts");
+const corporateRouter = require("./routes/corporates");
 
 const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
@@ -79,6 +80,7 @@ app.use("/api", indexRouter);
 app.use("/api/stocks", stocksRouter);
 app.use("/api/cluster", clusterRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/corporates", corporateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
