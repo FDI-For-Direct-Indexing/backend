@@ -12,7 +12,6 @@ const clusterRouter = require("./routes/cluster");
 const postsRouter = require("./routes/posts");
 const corporateRouter = require("./routes/corporates");
 
-const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
@@ -29,7 +28,6 @@ const corsOptions = {
     } else {
       callback(new Error(`Not Allowed Origin!`));
     }
-    W;
   },
 };
 
@@ -95,9 +93,10 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  // send the error message as JSON
+  res.status(err.status || 500).json({
+    error: err.message,
+  });
 });
 
 module.exports = app;
