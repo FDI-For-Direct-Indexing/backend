@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { chatDbConnection } = require("../db");
+const { chatDbConnection } = require("./db");
 
 const messageSchema = new mongoose.Schema({
   senderId: { type: String, required: true },

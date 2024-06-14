@@ -1,5 +1,5 @@
-const Room = require("../models/chat/Room");
-const Message = require("../models/chat/Message");
+const Room = require("../models/Room");
+const Message = require("../models/Message");
 
 const handleSocketConnection = io => {
   io.on("connection", socket => {

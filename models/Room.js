@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { chatDbConnection } = require("../db");
+const { chatDbConnection } = require("./db");
 
 const roomSchema = new mongoose.Schema({
   roomName: { type: String, required: true },
