@@ -25,7 +25,26 @@ const searchIncludedCorporate = async (keyword) => {
   return response;
 };
 
+const getCorporates = async () => {
+  const corporates = await Corporate.find();
+  let response = [];
+  corporates.forEach((corporate) => {
+    response.push({
+      id: corporate.code,
+      name: corporate.name,
+      profit: corporate.profitability,
+      growth: corporate.growth,
+      safety: corporate.stability,
+      efficiency: corporate.efficiency,
+      oogong_rate: corporate.ogong_rate,
+    });
+  });
+
+  return response;
+};
+
 module.exports = {
   searchCorporate,
   searchIncludedCorporate,
+  getCorporates,
 };

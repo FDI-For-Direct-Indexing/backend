@@ -12,4 +12,7 @@ router.get("/include", async function (req, res, next) {
   return res.json(await corporates.searchIncludedCorporate(keyword));
 });
 
+router.get("/list", async function (req, res, next) {
+  return res.json(await corporates.getCorporates());
+});
 module.exports = router;
