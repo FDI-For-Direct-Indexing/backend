@@ -8,7 +8,7 @@ var app = require("../app");
 var debug = require("debug")("ogong-backend:server");
 var http = require("http");
 var socketIo = require("socket.io");
-var { handleSocketConnection } = require("../service/socketService");
+var { handleSocketConnection } = require("../service/chat");
 
 /**
  * Get port from environment and store in Express.
@@ -21,11 +21,15 @@ app.set("port", port);
  * Create HTTP server.
  */
 
+const { CLIENT_URL } = process.env;
+
+const whitelist = ["http://localhost:3000", CLIENT_URL];
+
 var server = http.createServer(app);
 var io = socketIo(server, {
   path: "/chat",
   cors: {
-    origin: "http://localhost:3000",
+    origin: whitelist,
     methods: ["GET", "POST"],
     credentials: true,
   },
