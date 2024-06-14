@@ -16,7 +16,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 require("dotenv").config();
 
-const { MONGO_URI, CLIENT_URL } = process.env;
+const { CLIENT_URL } = process.env;
 
 const whitelist = ["http://localhost:3000", CLIENT_URL];
 
@@ -30,17 +30,17 @@ const corsOptions = {
   },
 };
 
-const mongoose = require("mongoose");
-mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: "MonkeyRanking",
-  })
-  .then(async () => {
-    console.log("MongoDB connected");
-  })
-  .catch((e) => console.log(e));
+// const mongoose = require("mongoose");
+// mongoose
+//   .connect(MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     dbName: "MonkeyRanking",
+//   })
+//   .then(async () => {
+//     console.log("MongoDB connected");
+//   })
+//   .catch((e) => console.log(e));
 
 var app = express();
 app.use(cors(corsOptions));
