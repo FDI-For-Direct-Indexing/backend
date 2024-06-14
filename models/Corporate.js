@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { monkeyRankingDbConnection } = require("./db");
 
 const CorporateSchema = new mongoose.Schema(
   {
@@ -36,6 +37,6 @@ const CorporateSchema = new mongoose.Schema(
   }
 );
 
-const Corporate = mongoose.model("Corporate", CorporateSchema);
+const Corporate = monkeyRankingDbConnection.model("Corporate", CorporateSchema);
 
 module.exports = Corporate;

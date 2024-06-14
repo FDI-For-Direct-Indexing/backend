@@ -1,5 +1,5 @@
 const { mongo, default: mongoose } = require("mongoose");
-
+const { monkeyRankingDbConnection } = require("./db");
 
 const StockSchema = new mongoose.Schema(
   {
@@ -63,18 +63,17 @@ const StockSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
-    
+
     corporate_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Corporate",
     },
-
   },
   {
     timestamps: true,
   }
 );
 
-const Stock = mongoose.model("Stock", StockSchema);
+const Stock = monkeyRankingDbConnection.model("Stock", StockSchema);
 
 module.exports = Stock;
