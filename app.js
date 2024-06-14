@@ -9,7 +9,6 @@ var errorHandler = require("./common/error/ErrorHandler");
 var indexRouter = require("./routes/index");
 var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
-const postsRouter = require("./routes/posts");
 const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
 
@@ -18,7 +17,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 require("dotenv").config();
 
-const { MONGO_URI, CLIENT_URL } = process.env;
+const { CLIENT_URL } = process.env;
 
 const whitelist = ["http://localhost:3000", CLIENT_URL];
 
@@ -32,23 +31,8 @@ const corsOptions = {
   },
 };
 
-const mongoose = require("mongoose");
-mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: "MonkeyRanking",
-  })
-  .then(async () => {
-    console.log("MongoDB connected");
-  })
-  .catch((e) => console.log(e));
-
 var app = express();
 app.use(cors(corsOptions));
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -79,7 +63,6 @@ app.use("/api", indexRouter);
 app.use("/api/stocks", stocksRouter);
 app.use("/api/stocksDetail", stocksDetailRouter);
 app.use("/api/cluster", clusterRouter);
-app.use("/api/posts", postsRouter);
 app.use("/api/corporates", corporateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
