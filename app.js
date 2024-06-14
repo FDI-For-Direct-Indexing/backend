@@ -31,23 +31,8 @@ const corsOptions = {
   },
 };
 
-// const mongoose = require("mongoose");
-// mongoose
-//   .connect(MONGO_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     dbName: "MonkeyRanking",
-//   })
-//   .then(async () => {
-//     console.log("MongoDB connected");
-//   })
-//   .catch((e) => console.log(e));
-
 var app = express();
 app.use(cors(corsOptions));
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
 
 app.use(logger("dev"));
 app.use(express.json());
