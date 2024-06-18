@@ -6,7 +6,7 @@ const accessComment = async (code, message) => {
     // 감정분석을 위한 API 호출
     const sentiment = await callSentimentAnalysisAPI(message);
     
-    if (sentiment == null) {
+    if (sentiment == null || sentiment == undefined || sentiment == "") {
       console.log('sentiment is null. 감정분석 실패');
       return;
     }
