@@ -5,10 +5,17 @@ const getClusterResult = async (stockList) => {
   const ids = [];
   const features = [];
   stockList.forEach((stock) => {
-    const { id, profitability, stability, activity, potential, ogoong_rate } =
-      stock;
+    const {
+      id,
+      name,
+      profitability,
+      stability,
+      activity,
+      potential,
+      ogoong_rate,
+    } = stock;
     features.push([profitability, stability, activity, potential, ogoong_rate]);
-    ids.push(id);
+    ids.push([id, name]);
   });
 
   // match scale with min-max normalization
@@ -50,7 +57,12 @@ function transfromDemension(features) {
 
 function matchIdWithPcaResult(pca, ids) {
   const result = getMinMaxScale(pca);
-  return result.map((point, index) => [ids[index], point[0], point[1]]);
+  return result.map((point, index) => [
+    ids[index][0],
+    ids[index][1],
+    point[0],
+    point[1],
+  ]);
 }
 
 function kmeansClustering(result) {
@@ -67,8 +79,9 @@ function getClusterResultResponse(result, kmeans) {
   kmeans.clusters.map((cluster, index) => {
     clusterResult[cluster].data.push({
       id: result[index][0],
-      x: result[index][1],
-      y: result[index][2],
+      name: result[index][1],
+      x: result[index][2],
+      y: result[index][3],
     });
   });
   return clusterResult;
