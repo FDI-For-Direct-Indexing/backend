@@ -1,8 +1,8 @@
 const Room = require("../models/Room");
 const Message = require("../models/Message");
 
-const handleSocketConnection = io => {
-  io.on("connection", socket => {
+const handleSocketConnection = (io) => {
+  io.on("connection", (socket) => {
     console.log("New client connected");
 
     // 클라이언트가 방에 참여할 때

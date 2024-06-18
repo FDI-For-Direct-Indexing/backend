@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+const axios = require("axios");
 
 var errorHandler = require("./common/error/ErrorHandler");
 var indexRouter = require("./routes/index");
@@ -11,9 +12,11 @@ var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
 const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
+const realtimePriceRouter = require("./routes/realtimePrice");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
+const { request } = require("http");
 
 require("dotenv").config();
 
@@ -66,6 +69,7 @@ app.use("/api/cluster", clusterRouter);
 app.use("/api/corporates", corporateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api/realtimePrice", realtimePriceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
