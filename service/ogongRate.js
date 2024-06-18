@@ -8,7 +8,7 @@ const accessComment = async (code, message) => {
     
     if (sentiment == null) {
       console.log('sentiment is null. 감정분석 실패');
-      // return;
+      return;
     }
     // 감정분석 결과를 오공지수에 업데이트
     const result = await updateOgongRate(code, sentiment);
