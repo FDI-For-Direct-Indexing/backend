@@ -50,8 +50,10 @@ const callSentimentAnalysisAPI = async (message) => {
       return 100;
     } else if (sentiment == 'neutral') {
       return 50;
-    } else { // negative
+    } else if (sentiment == 'negative') {
       return 0;
+    } else {
+      return null;
     }
   } catch (error) {
     console.error(error);
