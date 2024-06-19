@@ -56,7 +56,7 @@ const callSentimentAnalysisAPI = async (message) => {
       return null;
     }
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
