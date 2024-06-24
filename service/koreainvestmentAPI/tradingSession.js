@@ -1,13 +1,19 @@
-var cron = require('node-cron');
-const Price = require('../../models/Price');
-const { connectWebSocket } = require('./realtimePrice');
+var cron = require("node-cron");
+const Price = require("../../models/Price");
+const ws = require("./kisSocket");
+const codeList = require("./stockCodeList");
+const { currentPrice } = require("./realtimePrice");
+const Corporate = require("../../models/Corporate");
+const { getWsStatus, setWsStatus } = require("../stocksDetail");
 
 // 장 시작 시 전날 데이터 삭제 및 웹소켓 연결 시작
-cron.schedule('0 9 * * 1-5', async () => {
-  console.log('Starting market day: Deleting previous day data');
+cron.schedule("0 9 * * 1-5", async () => {
+  console.log("Starting market day: Deleting previous day data");
   await Price.deleteMany({});
-  console.log('Previous day data deleted');
-  connectWebSocket();
+  console.log("Previous day data deleted");
+  if (!getWsStatus()) {
+    setWsStatus(true);
+  }
 });
 
 // 장 종료 시 웹소켓 연결 종료
