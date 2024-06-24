@@ -20,6 +20,9 @@ const { request } = require("http");
 
 require("dotenv").config();
 
+require("./service/koreainvestmentAPI/kisSocket");
+require("./service/koreainvestmentAPI/tradingSession");
+
 const { CLIENT_URL } = process.env;
 
 const whitelist = ["http://localhost:3000", CLIENT_URL];
