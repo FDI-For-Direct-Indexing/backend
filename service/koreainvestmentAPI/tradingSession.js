@@ -16,10 +16,25 @@ cron.schedule("0 9 * * 1-5", async () => {
   }
 });
 
-// 장 종료 시 웹소켓 연결 종료
-cron.schedule('0 15 * * 1-5', ()=>{
-  console.log('Ending market day: Closing WebSocket connection');
+// 장 마감 10분 전, 웹소켓 연결 종료
+cron.schedule("20 15 * * 1-5", async () => {
   if (ws) {
+    await Price.deleteMany({});
+    for (let code of codeList) {
+      const cp = await currentPrice(code);
+      const price = cp.price;
+      const compare = cp.compare;
+      const corporate = await Corporate.findOne({ code: code });
+      const corporate_id = corporate._id;
+      Price.create({
+        corporate_id: corporate_id,
+        price: price,
+        compare: compare,
+      });
+    }
     ws.close();
   }
-})
+  if (getWsStatus()) {
+    setWsStatus(false);
+  }
+});
