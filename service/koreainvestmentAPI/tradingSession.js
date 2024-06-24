@@ -38,3 +38,20 @@ cron.schedule("20 15 * * 1-5", async () => {
     setWsStatus(false);
   }
 });
+
+// 장 마감 시, 최종 현재가 데이터 저장
+cron.schedule("32 15 * * 1-5", async () => {
+  await Price.deleteMany({});
+  for (let code of codeList) {
+    const cp = await currentPrice(code);
+    const price = cp.price;
+    const compare = cp.compare;
+    const corporate = await Corporate.findOne({ code: code });
+    const corporate_id = corporate._id;
+    Price.create({
+      corporate_id: corporate_id,
+      price: price,
+      compare: compare,
+    });
+  }
+});
