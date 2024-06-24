@@ -14,6 +14,20 @@ const {
 const ws = new WebSocket(
   "ws://ops.koreainvestment.com:21000/tryitout/H0STCNT0"
 );
+
+let code = null;
+let resolveCodePromise;
+let codePromise = new Promise((resolve) => {
+  resolveCodePromise = resolve;
+});
+
+async function waitForCode() {
+  if (!code) {
+    await codePromise;
+  }
+  return code;
+}
+
 ws.on("open", async function open() {
   console.log("KIS WebSocket connection opened");
 
@@ -39,6 +53,7 @@ ws.on("open", async function open() {
       },
     });
     ws.send(message);
+  }
 });
 
 var firstConnection = true;
@@ -139,4 +154,12 @@ async function processStockData(data) {
   return [price, compare];
 }
 
+function onCodeRetrieved(retrievedCode) {
+  code = retrievedCode;
+  if (resolveCodePromise) {
+    resolveCodePromise();
+  }
+}
+
 module.exports = ws;
+module.exports.onCodeRetrieved = onCodeRetrieved;
