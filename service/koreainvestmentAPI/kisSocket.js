@@ -1,4 +1,16 @@
 const WebSocket = require("ws");
+const CryptoJS = require("crypto-js");
+const Price = require("../../models/Price");
+const Corporate = require("../../models/Corporate");
+const { getStoredApprovalKey } = require("./oauth");
+const {
+  getCurrentStockCode,
+  saveStockPrice,
+  setCurrentStockCode,
+  setPriceCompare,
+  getWsStatus,
+} = require("../stocksDetail");
+
 const ws = new WebSocket(
   "ws://ops.koreainvestment.com:21000/tryitout/H0STCNT0"
 );
@@ -6,6 +18,12 @@ ws.on("open", async function open() {
   console.log("KIS WebSocket connection opened");
 
   const approval_key = await getStoredApprovalKey();
+  const code = await waitForCode();
+
+  if (!code) {
+    console.error("No stock code found");
+    return;
+  } else {
     const message = JSON.stringify({
       header: {
         approval_key: approval_key,
