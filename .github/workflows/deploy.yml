@@ -19,11 +19,17 @@ jobs:
           echo "PORT=$PORT" >> .env
           echo "MONGO_URI=$MONGO_URI" >> .env
           echo "CLIENT_URL=$CLIENT_URL" >> .env
+          echo "SENTI_API_URL=$SENTI_API_URL" >> .env
+          echo "SENTI_API_CLIENT_ID=$SENTI_API_CLIENT_ID" >> .env
+          echo "SENTI_API_CLIENT_SECRET=$SENTI_API_CLIENT_SECRET" >> .env
 
         env:
           PORT: ${{ secrets.PORT }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
           CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          SENTI_API_URL: ${{ secrets.SENTI_API_URL }}
+          SENTI_API_CLIENT_ID: ${{ secrets.SENTI_API_CLIENT_ID }}
+          SENTI_API_CLIENT_SECRET: ${{ secrets.SENTI_API_CLIENT_SECRET }}
 
       - name: Copy .env to remote server
         uses: appleboy/scp-action@master

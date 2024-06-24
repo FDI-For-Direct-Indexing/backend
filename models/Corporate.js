@@ -35,6 +35,10 @@ const CorporateSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    ogong_cnt: {
+      type: Number,
+      required: false,
+    },
   },
   {
     timestamps: true,
