@@ -1,34 +1,52 @@
-const Stock = require('../models/Stock');
-const Corporate = require('../models/Corporate');
+const Stock = require("../models/Stock");
+const Corporate = require("../models/Corporate");
+const Price = require("../models/Price");
 
-const getStockFundamentals = async (code) =>{
+const getStockFundamentals = async (code) => {
   try {
     const corporate = await Corporate.findOne({ code: code });
     const stock = await Stock.findOne({ stock: corporate.code });
-    
-    const profit_key = ['ROE', '영업이익률', '순이익률'];
-    const growth_key = ['자기자본비율', '영업이익', '영업이익률', '매출액'];
-    const stability_key = ['부채비율', '유동비율'];
-    const efficiency_key = ['재고자산회전일수', '매입채무회전일수', '매출채권회전일수'];
 
-    const profit_value = [stock.pro_roe, stock.pro_operating_profit_margin, stock.pro_net_profit_margin];
-    const growth_value = [stock.gro_inventory_turnover_period, stock.gro_is_net_income_yoy, stock.gro_is_operatingprofit_loss_yoy, stock.gro_is_reveneue_yoy];
+    const profit_key = ["ROE", "영업이익률", "순이익률"];
+    const growth_key = ["자기자본비율", "영업이익", "영업이익률", "매출액"];
+    const stability_key = ["부채비율", "유동비율"];
+    const efficiency_key = [
+      "재고자산회전일수",
+      "매입채무회전일수",
+      "매출채권회전일수",
+    ];
+
+    const profit_value = [
+      stock.pro_roe,
+      stock.pro_operating_profit_margin,
+      stock.pro_net_profit_margin,
+    ];
+    const growth_value = [
+      stock.gro_inventory_turnover_period,
+      stock.gro_is_net_income_yoy,
+      stock.gro_is_operatingprofit_loss_yoy,
+      stock.gro_is_reveneue_yoy,
+    ];
     const stability_value = [stock.sta_debt_ratio, stock.sta_current_ratio];
-    const efficiency_value = [stock.eff_inventory_turnover_period, stock.eff_payables_turnover_period, stock.eff_receivables_turnover_period];
+    const efficiency_value = [
+      stock.eff_inventory_turnover_period,
+      stock.eff_payables_turnover_period,
+      stock.eff_receivables_turnover_period,
+    ];
 
     const profit = [];
     for (let i = 0; i < profit_key.length; i++) {
       profit.push({
         matrix: profit_key[i],
-        rates: profit_value[i]
+        rates: profit_value[i],
       });
     }
-    
+
     const growth = [];
     for (let i = 0; i < growth_key.length; i++) {
       growth.push({
         matrix: growth_key[i],
-        rates: growth_value[i]
+        rates: growth_value[i],
       });
     }
 
@@ -36,7 +54,7 @@ const getStockFundamentals = async (code) =>{
     for (let i = 0; i < stability_key.length; i++) {
       stability.push({
         matrix: stability_key[i],
-        rates: stability_value[i]
+        rates: stability_value[i],
       });
     }
 
@@ -44,7 +62,7 @@ const getStockFundamentals = async (code) =>{
     for (let i = 0; i < efficiency_key.length; i++) {
       efficiency.push({
         matrix: efficiency_key[i],
-        rates: efficiency_value[i]
+        rates: efficiency_value[i],
       });
     }
 
@@ -59,14 +77,72 @@ const getStockFundamentals = async (code) =>{
       stability: stability,
       efficiency: efficiency,
     };
-    
+
     return result;
-    
   } catch (error) {
     return error;
   }
-}
+};
+
+let stockPrice = 0;
+
+// 주식 가격 가져오기
+const getStockPrice = () => {
+  try {
+    return stockPrice;
+  } catch (error) {
+    return error;
+  }
+};
+
+const saveStockPrice = (price) => {
+  try {
+    stockPrice = price;
+    return stockPrice;
+  } catch (error) {
+    console.error("Error saving stock price:", error);
+    return error;
+  }
+};
+
+let currentStockCode = null;
+
+const setCurrentStockCode = (code) => {
+  currentStockCode = code;
+};
+
+const getCurrentStockCode = () => {
+  return currentStockCode;
+};
+
+let priceCompare = 0;
+
+const setPriceCompare = (compare) => {
+  priceCompare = compare;
+};
+
+const getPriceCompare = () => {
+  return priceCompare;
+};
+
+let wsStatus = false;
+
+const getWsStatus = () => {
+  return wsStatus;
+};
+
+const setWsStatus = (status) => {
+  wsStatus = status;
+};
 
 module.exports = {
-  getStockFundamentals
+  getStockFundamentals,
+  getStockPrice,
+  saveStockPrice,
+  setCurrentStockCode,
+  getCurrentStockCode,
+  setPriceCompare,
+  getPriceCompare,
+  getWsStatus,
+  setWsStatus,
 };
