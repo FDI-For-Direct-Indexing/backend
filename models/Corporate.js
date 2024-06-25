@@ -46,5 +46,6 @@ const CorporateSchema = new mongoose.Schema(
 );
 
 const Corporate = monkeyRankingDbConnection.model("Corporate", CorporateSchema);
+CorporateSchema.index({ code: 1 });
 
 module.exports = Corporate;
