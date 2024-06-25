@@ -2,6 +2,12 @@ const { PCA } = require("ml-pca");
 const { kmeans } = require("ml-kmeans");
 const Corporate = require("../models/Corporate");
 
+const cache = {
+  corporateData: null,
+  lastFetch: 0,
+  ttl: 1000 * 60 * 60, // 1 hour
+};
+
 const getClusterResult = async (stockList, sliderValue) => {
   const ids = [];
   const features = [];
@@ -12,24 +18,23 @@ const getClusterResult = async (stockList, sliderValue) => {
   });
 
   // match scale with min-max normalization
-  const scaledFeatures = await matchScale(features);
+  const scaledFeatures = matchScale(features);
 
   // analyze
-  const pcaResult = await transfromDemension(scaledFeatures);
+  const pcaResult = transfromDimension(scaledFeatures);
 
-  console.log(sliderValue);
+  // console.log(sliderValue);
   // map demension and match id with pca result
-  const pcaResultAndId = await matchIdWithPcaResult(pcaResult, ids, features, sliderValue);
+  const pcaResultAndId = matchIdWithPcaResult(pcaResult, ids, features, sliderValue);
 
   // kmeans clustering
-  const kmeansResult = await kmeansClustering(pcaResult);
+  const kmeansResult = kmeansClustering(pcaResult);
 
   // cluster to response
   const clusterResult = await getClusterResultResponse(
     pcaResultAndId,
     kmeansResult
   );
-  console.log(clusterResult);
 
   return clusterResult;
 };
@@ -45,7 +50,7 @@ function matchScale(features) {
   });
 }
 
-function transfromDemension(features) {
+function transfromDimension(features) {
   const pca = new PCA(features);
   return pca.predict(features).to2DArray();
 }
@@ -56,12 +61,7 @@ function matchIdWithPcaResult(pca, ids, features, sliderValue) {
     ids[index][0],
     ids[index][1],
     point[0],
-    point[1],
-    Math.round(features[index][0] / sliderValue[0]), // profitability
-    Math.round(features[index][1] / sliderValue[1]), // stability
-    Math.round(features[index][2] / sliderValue[2]), // activity
-    Math.round(features[index][3] / sliderValue[3]), // potential
-    Math.round(features[index][4] / sliderValue[4]), // ogoong_rate
+    point[1]
   ]);
 }
 
@@ -69,15 +69,30 @@ function kmeansClustering(result) {
   return kmeans(result, 5);
 }
 
+const getCorporateData = async () => {
+  const now = Date.now();
+  if (!cache.corporateData || (now - cache.lastFetch) > cache.ttl) {
+    const corporates = await Corporate.find({});
+    cache.corporateData = corporates.reduce((map, corp) => {
+      map[corp.code] = corp;
+      return map;
+    }, {});
+    cache.lastFetch = now;
+  }
+  return cache.corporateData;
+};
+
 async function getClusterResultResponse(result, kmeans) {
   const clusterResult = Array.from({ length: 5 }, (_, id) => ({
     id,
     data: [],
   }));
 
+  const corporateData = await getCorporateData();
+
   // 클러스터에 대한 id 매핑
   await Promise.all(kmeans.clusters.map(async (cluster, index) => {
-    const corp = await Corporate.findOne({ code: result[index][0] })
+    const corp = corporateData[result[index][0]];
 
     clusterResult[cluster].data.push({
       id: result[index][0],
