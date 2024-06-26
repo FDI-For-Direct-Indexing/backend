@@ -72,6 +72,16 @@ const handlePriceSocketConnection = (io) => {
   io.on("connection", (socket) => {
     console.log("New client connected");
 
+    socket.on("join price room", async ({ roomCode }) => {
+      socket.join(roomCode);
+      console.log(`Client joined price room ${roomCode}`);
+
+      const corporate = await Corporate.findOne({ code: roomCode });
+      const loadedPrice = await Price.findOne({ corporate_id: corporate._id });
+
+      socket.emit("load price", loadedPrice);
+    });
+
     // 현재가 요청
     socket.on("request current price", async ({ stockCode }) => {
       console.log(`Requesting current price for stockCode: ${stockCode}`);
