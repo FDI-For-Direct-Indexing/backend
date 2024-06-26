@@ -1,5 +1,3 @@
-const WebSocket = require("ws");
-const crypto = require("crypto");
 const { getAccessToken } = require("./accessToken");
 const { getCurrentPrice } = require("./currentPrice");
 
@@ -10,7 +8,7 @@ const currentPrice = async (stockCode) => {
     const accessToken = await getAccessToken();
 
     // 현재가 POST 요청
-    return getCurrentPrice(stockCode, accessToken);
+    return await getCurrentPrice(stockCode, accessToken);
   } catch (error) {
     console.error(
       "Error fetching current price:",
