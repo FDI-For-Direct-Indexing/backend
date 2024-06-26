@@ -15,8 +15,7 @@ const headers = {
   "Content-Type": "application/json; charset=UTF-8",
 };
 
-var accessToken =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6ImYwMGZhYWNiLTVhMzAtNDRmZS1hNjEwLWU2MjFmOGE3ZWUxYiIsInByZHRfY2QiOiIiLCJpc3MiOiJ1bm9ndyIsImV4cCI6MTcxOTI3MTgwMCwiaWF0IjoxNzE5MTg1NDAwLCJqdGkiOiJQU3F2NTJza1VnZjZCcWVTSDVZcUh1VGk3OUVlRHV3bkJXTjEifQ.nClPt01IYMWuEuxKmtKPf06hFjSBCtMTfPYJVrqu7PIYA1MQdotBmxBI4S2XOqM0JoYFvZ_5y_tLWUKozaT6RQ";
+var accessToken = null;
 
 // 접근 토큰 발급 함수
 async function getAccessToken() {
