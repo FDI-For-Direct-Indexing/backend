@@ -1,6 +1,8 @@
 var express = require("express");
 const stocks = require("../service/stocksDetail");
 const router = express.Router();
+const { setCurrentStockCode } = require("../service/stocksDetail");
+const { onCodeRetrieved } = require("../service/koreainvestmentAPI/kisSocket");
 
 /**
  * 수익성: proTotalproROE, proTotalproOperatingProfitMargin, prototalproNetProfitMargin
@@ -11,8 +13,8 @@ const router = express.Router();
 
 /* GET stock */
 router.get("/:code", async function (req, res, next) {
-  return res.json(await stocks.getStockFundamentals(req.params.code));
+  const stockInfo = await stocks.getStockFundamentals(req.params.code);
+  return res.json(stockInfo);
 });
-
 
 module.exports = router;
