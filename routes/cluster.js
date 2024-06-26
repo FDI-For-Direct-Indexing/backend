@@ -3,9 +3,9 @@ const router = express.Router();
 const cluster = require("../service/cluster");
 
 router.post("/", async (req, res) => {
-  const { stockList } = req.body;
+  const { stockList, sliderValues } = req.body;
 
-  return res.json(await cluster.getClusterResult(stockList));
+  return res.json(await cluster.getClusterResult(stockList, sliderValues));
 });
 
 module.exports = router;
