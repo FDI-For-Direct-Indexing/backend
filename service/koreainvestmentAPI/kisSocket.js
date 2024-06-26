@@ -1,58 +1,50 @@
 const WebSocket = require("ws");
 const CryptoJS = require("crypto-js");
-const Price = require("../../models/Price");
-const Corporate = require("../../models/Corporate");
-const { getStoredApprovalKey } = require("./oauth");
-const {
-  getCurrentStockCode,
-  saveStockPrice,
-  setCurrentStockCode,
-  setPriceCompare,
-  getWsStatus,
-} = require("../stocksDetail");
+const { getStoredApprovalKey, issueApprovalKey } = require("./oauth");
+const codeList = require("./stockCodeList");
 
 const ws = new WebSocket(
   "ws://ops.koreainvestment.com:21000/tryitout/H0STCNT0"
 );
 
-let code = null;
-let resolveCodePromise;
-let codePromise = new Promise((resolve) => {
-  resolveCodePromise = resolve;
-});
-
-async function waitForCode() {
-  if (!code) {
-    await codePromise;
-  }
-  return code;
-}
+let prices = [{}];
+let compares = [{}];
 
 ws.on("open", async function open() {
   console.log("KIS WebSocket connection opened");
 
-  const approval_key = await getStoredApprovalKey();
-  const code = await waitForCode();
+  const batchSize = 41; // 한 번에 요청할 종목 수
+  const numBatches = Math.ceil(codeList.length / batchSize); // 필요한 배치 수 계산
 
-  if (!code) {
-    console.error("No stock code found");
-    return;
-  } else {
-    const message = JSON.stringify({
-      header: {
-        approval_key: approval_key,
-        custtype: "P",
-        tr_type: "1",
-        "content-type": "application/json; charset=UTF-8",
-      },
-      body: {
-        input: {
-          tr_id: "H0STCNT0",
-          tr_key: code, // 임의로 삼성전자 코드 넣음
+  for (let batch = 0; batch < numBatches; batch++) {
+    const startIndex = batch * batchSize;
+    const endIndex = Math.min((batch + 1) * batchSize, codeList.length);
+    const currentBatch = codeList.slice(startIndex, endIndex);
+
+    // 새로운 접근키를 가져오는 함수 호출
+    const approval_key = await (batch === 0
+      ? getStoredApprovalKey()
+      : issueApprovalKey());
+
+    for (let code of currentBatch) {
+      console.log("Requesting stock data for code:", code);
+
+      const message = JSON.stringify({
+        header: {
+          approval_key: approval_key,
+          custtype: "P",
+          tr_type: "1",
+          "content-type": "application/json; charset=UTF-8",
         },
-      },
-    });
-    ws.send(message);
+        body: {
+          input: {
+            tr_id: "H0STCNT0",
+            tr_key: code,
+          },
+        },
+      });
+      ws.send(message);
+    }
   }
 });
 
@@ -62,12 +54,11 @@ var key = null;
 
 ws.on("message", async function incoming(data) {
   const responseData = data.toString("utf8");
+  const parsedData = JSON.parse(responseData);
+
   if (firstConnection) {
-    const parsedData = JSON.parse(responseData);
     if (parsedData.header.tr_id === "PINGPONG") {
       console.log("Received PINGPONG");
-      ws.close();
-      return;
     } else if (parsedData.body.msg1 === "SUBSCRIBE SUCCESS") {
       console.log("Subscription successful");
       iv = parsedData.body.output.iv;
@@ -76,9 +67,8 @@ ws.on("message", async function incoming(data) {
     }
   } else {
     const fields = responseData.split("|");
-    if (fields[1] === "H0STCNT0" && fields.length > 3) {
-      let stockData = null;
 
+    if (fields[1] === "H0STCNT0" && fields.length > 3) {
       if (fields[0] === "0") {
         // 암호화되지 않은 데이터
         stockData = await processStockData(fields[3]);
@@ -93,12 +83,11 @@ ws.on("message", async function incoming(data) {
       }
 
       if (stockData) {
-        saveStockPrice(stockData[0]);
-        setPriceCompare(stockData[1]);
+        prices[stockData[0]] = stockData[1];
+        compares[stockData[0]] = stockData[2];
       }
     } else {
       console.log("Received non-trading data, ignoring:", responseData);
-      ws.close();
     }
   }
 });
@@ -109,10 +98,7 @@ ws.on("error", function error(error) {
 
 ws.on("close", function close() {
   console.log("KIS WebSocket connection closed");
-  setCurrentStockCode(null);
 });
-
-// return ws;
 
 function decryptData(data, key, iv) {
   try {
@@ -147,19 +133,20 @@ async function processStockData(data) {
   const price = parseInt(response[2], 10);
   const compare = parseInt(response[4], 10);
 
-  setCurrentStockCode(stockCode);
-  saveStockPrice(price);
-  setPriceCompare(compare);
-
-  return [price, compare];
+  return [stockCode, price, compare];
 }
 
-function onCodeRetrieved(retrievedCode) {
-  code = retrievedCode;
-  if (resolveCodePromise) {
-    resolveCodePromise();
-  }
-}
+getPriceOfStock = (stockCode) => {
+  return prices[stockCode];
+};
 
-module.exports = ws;
-module.exports.onCodeRetrieved = onCodeRetrieved;
+getCompareOfStock = (stockCode) => {
+  return compares[stockCode];
+};
+
+resetStockData = () => {
+  prices = [{}];
+  compares = [{}];
+};
+
+module.exports = { ws, getPriceOfStock, getCompareOfStock, resetStockData };
