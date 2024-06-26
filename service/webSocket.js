@@ -1,14 +1,11 @@
 const Room = require("../models/Room");
 const Message = require("../models/Message");
-const {
-  getStockPrice,
-  getPriceCompare,
-  getWsStatus,
-} = require("./stocksDetail");
-const ws = require("./koreainvestmentAPI/kisSocket");
-const codeList = require("./koreainvestmentAPI/stockCodeList");
 const Corporate = require("../models/Corporate");
 const Price = require("../models/Price");
+const {
+  getPriceOfStock,
+  getCompareOfStock,
+} = require("./koreainvestmentAPI/kisSocket");
 
 const handleChatSocketConnection = (io) => {
   io.on("connection", (socket) => {
@@ -85,21 +82,35 @@ const handlePriceSocketConnection = (io) => {
     // 현재가 요청
     socket.on("request current price", async ({ stockCode }) => {
       console.log(`Requesting current price for stockCode: ${stockCode}`);
+
+      let status = false;
+      if (getPriceOfStock(stockCode)) {
+        console.log(
+          stockCode,
+          "Using stored price data:",
+          getPriceOfStock(stockCode)
+        );
+        status = true;
+      }
+
       try {
         setInterval(async () => {
-          if (!getWsStatus()) {
+          if (!status) {
             const corporate = await Corporate.findOne({ code: stockCode });
             const price = await Price.findOne({ corporate_id: corporate._id });
+            if (!price) {
+              return socket.emit("error", "Failed to get current price");
+            }
             socket.emit("current price", {
               status: "success",
               price: price.price,
               compare: price.compare,
             });
           } else {
-            const price = await getStockPrice();
-            const compare = await getPriceCompare();
-
+            const price = getPriceOfStock(stockCode);
+            const compare = getCompareOfStock(stockCode);
             if (!price) {
+              console.log("price: ", price);
               return socket.emit("error", "Failed to get current price");
             }
             socket.emit("current price", {
