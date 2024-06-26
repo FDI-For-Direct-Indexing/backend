@@ -19,12 +19,12 @@ async function getApprovalKey() {
   return approval_key;
 }
 
-function getStoredApprovalKey() {
-  if (!approval_key) {
-    const approval_key = getApprovalKey();
-    return approval_key;
-  }
+function getStoredApprovalKey(approval_key) {
   return approval_key;
 }
 
-module.exports = { getApprovalKey, getStoredApprovalKey };
+async function issueApprovalKey() {
+  return await getApprovalKey();
+}
+
+module.exports = { getApprovalKey, getStoredApprovalKey, issueApprovalKey };
