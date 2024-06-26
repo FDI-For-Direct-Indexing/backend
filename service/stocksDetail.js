@@ -84,65 +84,6 @@ const getStockFundamentals = async (code) => {
   }
 };
 
-let stockPrice = 0;
-
-// 주식 가격 가져오기
-const getStockPrice = () => {
-  try {
-    return stockPrice;
-  } catch (error) {
-    return error;
-  }
-};
-
-const saveStockPrice = (price) => {
-  try {
-    stockPrice = price;
-    return stockPrice;
-  } catch (error) {
-    console.error("Error saving stock price:", error);
-    return error;
-  }
-};
-
-let currentStockCode = null;
-
-const setCurrentStockCode = (code) => {
-  currentStockCode = code;
-};
-
-const getCurrentStockCode = () => {
-  return currentStockCode;
-};
-
-let priceCompare = 0;
-
-const setPriceCompare = (compare) => {
-  priceCompare = compare;
-};
-
-const getPriceCompare = () => {
-  return priceCompare;
-};
-
-let wsStatus = false;
-
-const getWsStatus = () => {
-  return wsStatus;
-};
-
-const setWsStatus = (status) => {
-  wsStatus = status;
-};
-
 module.exports = {
   getStockFundamentals,
-  getStockPrice,
-  saveStockPrice,
-  setCurrentStockCode,
-  getCurrentStockCode,
-  setPriceCompare,
-  getPriceCompare,
-  getWsStatus,
-  setWsStatus,
 };

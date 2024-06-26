@@ -13,9 +13,6 @@ const { onCodeRetrieved } = require("../service/koreainvestmentAPI/kisSocket");
 
 /* GET stock */
 router.get("/:code", async function (req, res, next) {
-  const stockCode = req.params.code;
-  setCurrentStockCode(stockCode);
-  onCodeRetrieved(stockCode);
   const stockInfo = await stocks.getStockFundamentals(req.params.code);
   return res.json(stockInfo);
 });
