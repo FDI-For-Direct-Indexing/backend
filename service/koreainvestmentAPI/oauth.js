@@ -3,7 +3,7 @@ const axios = require("axios");
 
 let approval_key = null;
 async function getApprovalKey() {
-  const url = "https://openapivts.koreainvestment.com:29443/oauth2/Approval";
+  const url = "https://openapi.koreainvestment.com:9443/oauth2/Approval";
   const headers = {
     "Content-Type": "application/json; charset=UTF-8",
   };
