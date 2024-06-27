@@ -3,63 +3,43 @@ const { monkeyRankingDbConnection } = require("./db");
 
 const StockSchema = new mongoose.Schema(
   {
-    stock: {
-      type: String,
-      required: true,
-    },
-    ogong_rate: {
+    cur_ratio: {
       type: Number,
       required: false,
     },
-    pro_roe: {
+    debt_eq_ratio: {
       type: Number,
       required: false,
     },
-    pro_operating_profit_margin: {
+    sales_growth_rate: {
       type: Number,
       required: false,
     },
-    pro_net_profit_margin: {
+    op_income_growth_rate: {
       type: Number,
       required: false,
     },
-    gro_inventory_turnover_period: {
+    op_profit_margin: {
       type: Number,
       required: false,
     },
-    gro_is_net_income_yoy: {
+    roa: {
       type: Number,
       required: false,
     },
-    gro_is_operatingprofit_loss_yoy: {
+    roe: {
       type: Number,
       required: false,
     },
-    gro_is_reveneue_yoy: {
+    asset_turnover: {
       type: Number,
       required: false,
     },
-    sta_debt_ratio: {
+    debt_turnover: {
       type: Number,
       required: false,
     },
-    sta_current_ratio: {
-      type: Number,
-      required: false,
-    },
-    eff_inventory_turnover_period: {
-      type: Number,
-      required: false,
-    },
-    eff_payables_turnover_period: {
-      type: Number,
-      required: false,
-    },
-    eff_receivables_turnover_period: {
-      type: Number,
-      required: false,
-    },
-    asset_growth_rate: {
+    capital_turnover: {
       type: Number,
       required: false,
     },
