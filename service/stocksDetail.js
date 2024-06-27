@@ -5,7 +5,7 @@ const Price = require("../models/Price");
 const getStockFundamentals = async (code) => {
   try {
     const corporate = await Corporate.findOne({ code: code });
-    const stock = await Stock.findOne({ stock: corporate.code });
+    const stock = await Stock.findOne({ corporate_id: corporate.id });
 
     const profit_key = ["영업이익률", "ROA", "ROE"];
     const stability_key = ["유동비율", "부채비율"];
