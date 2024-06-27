@@ -24,17 +24,17 @@ require("./service/koreainvestmentAPI/kisSocket");
 require("./service/koreainvestmentAPI/tradingSession");
 const cron = require("node-cron");
 const { runBatchJob } = require("./batch/batchJob");
-// //batch
-// (async () => {
-//   console.log("Running batch job immediately");
-//   await runBatchJob();
+//batch
+(async () => {
+  console.log("Running batch job immediately");
+  await runBatchJob();
 
-//   cron.schedule("0 0 1 3,6,9,12 *", () => {
-//     // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
-//     console.log("Running batch job every 3 months");
-//     runBatchJob();
-//   });
-// })();
+  cron.schedule("0 0 1 3,6,9,12 *", () => {
+    // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
+    console.log("Running batch job every 3 months");
+    runBatchJob();
+  });
+})();
 
 const { CLIENT_URL } = process.env;
 
