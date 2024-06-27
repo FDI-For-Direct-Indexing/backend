@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+const axios = require("axios");
 
 var errorHandler = require("./common/error/ErrorHandler");
 var indexRouter = require("./routes/index");
@@ -11,21 +12,25 @@ var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
 const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
-const cron = require("node-cron");
+const realtimePriceRouter = require("./routes/realtimePrice");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
-const { runBatchJob } = require("./batch/batchJob");
+const { request } = require("http");
 
 require("dotenv").config();
 
+require("./service/koreainvestmentAPI/kisSocket");
+require("./service/koreainvestmentAPI/tradingSession");
+const cron = require("node-cron");
+const { runBatchJob } = require("./batch/batchJob");
 //batch
 (async () => {
   console.log("Running batch job immediately");
   await runBatchJob();
 
-  // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
   cron.schedule("0 0 1 3,6,9,12 *", () => {
+  // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
     console.log("Running batch job every 3 months");
     runBatchJob();
   });
@@ -80,6 +85,7 @@ app.use("/api/cluster", clusterRouter);
 app.use("/api/corporates", corporateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api/realtimePrice", realtimePriceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
