@@ -20,12 +20,6 @@ const getCurrentPrice = async (stockCode, accessToken) => {
   try {
     const response = await axios.get(url, { headers, params: queryParams });
 
-    console.log(
-      "요청 종목",
-      stockCode,
-      "현재가: ",
-      response.data.output.stck_prpr
-    );
     const price = response.data.output.stck_prpr;
     const compare = response.data.output.prdy_vrss;
     return { price, compare };
