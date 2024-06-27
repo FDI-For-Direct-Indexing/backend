@@ -18,9 +18,11 @@ function readCSV(filePath) {
       .pipe(csv())
       .on("data", data => {
         // 안정성 계산
+        const debtEqRatio = parseFloat(data.debt_eq_ratio);
+        const stabilityValue = 100 - debtEqRatio;
         const stability = calculateStability([
           data.cur_ratio,
-          data.debt_eq_ratio,
+          stabilityValue.toString(),
         ]);
         // 성장성 계산
         const growth = calculateGrowth([
