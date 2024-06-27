@@ -52,6 +52,7 @@ jobs:
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
             cd /home/ubuntu/Server-V2/backend
+            git reset --hard HEAD
             git pull origin main
             pm2 kill
             # Install NVM and Node.js on the remote server
