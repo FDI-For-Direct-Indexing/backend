@@ -17,22 +17,22 @@ const getStockFundamentals = async (code) => {
     ];
 
     const profit_value = [
-      stock.op_profit_margin,
-      stock.roa,
-      stock.roe,
+      (stock.op_profit_margin).toFixed(1),
+      (stock.roa).toFixed(1),
+      (stock.roe).toFixed(1),
     ];
     const stability_value = [
-      stock.cur_ratio,
-      stock.debt_eq_ratio
+      (stock.cur_ratio).toFixed(1),
+      (stock.debt_eq_ratio).toFixed(1)
     ];
     const growth_value = [
-      stock.sales_growth_rate,
-      stock.op_income_growth_rate
+      (stock.sales_growth_rate).toFixed(1),
+      (stock.op_income_growth_rate).toFixed(1)
     ];
     const efficiency_value = [
-      stock.asset_turnover,
-      stock.debt_turnover,
-      stock.capital_turnover
+      (stock.asset_turnover).toFixed(1),
+      (stock.debt_turnover).toFixed(1),
+      (stock.capital_turnover).toFixed(1)
     ];
 
     const profit = [];

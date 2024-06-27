@@ -30,7 +30,7 @@ const { runBatchJob } = require("./batch/batchJob");
   await runBatchJob();
 
   cron.schedule("0 0 1 3,6,9,12 *", () => {
-  // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
+    // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
     console.log("Running batch job every 3 months");
     runBatchJob();
   });

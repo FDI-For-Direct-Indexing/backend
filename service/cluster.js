@@ -99,11 +99,11 @@ async function getClusterResultResponse(result, kmeans) {
       name: result[index][1],
       x: result[index][2],
       y: result[index][3],
-      수익성: corp.profitability,   // profitability
-      안정성: corp.stability,       // stability
-      활동성: corp.efficiency,      // activity
-      생산성: corp.growth,          // potential
-      오공지수: corp.ogong_rate.toFixed(1),    // ogoong_rate
+      수익성: (corp.profitability).toFixed(1),   // profitability
+      안정성: (corp.stability).toFixed(1),       // stability
+      활동성: (corp.efficiency).toFixed(1),      // activity
+      생산성: (corp.growth).toFixed(1),          // potential
+      오공지수: (corp.ogong_rate).toFixed(1),    // ogoong_rate
     });
   }));
   return clusterResult;
