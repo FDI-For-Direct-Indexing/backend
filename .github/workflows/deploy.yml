@@ -22,7 +22,7 @@ jobs:
           echo "SENTI_API_URL=$SENTI_API_URL" >> .env
           echo "SENTI_API_CLIENT_ID=$SENTI_API_CLIENT_ID" >> .env
           echo "SENTI_API_CLIENT_SECRET=$SENTI_API_CLIENT_SECRET" >> .env
-          echo "DART_API_URL=$DART_API_URL" >> .env
+          echo "DART_API_KEY=$DART_API_KEY" >> .env
           echo "APP_KEY=$APP_KEY" >> .env
           echo "SECRET_KEY=$SECRET_KEY" >> .env
 
@@ -33,7 +33,7 @@ jobs:
           SENTI_API_URL: ${{ secrets.SENTI_API_URL }}
           SENTI_API_CLIENT_ID: ${{ secrets.SENTI_API_CLIENT_ID }}
           SENTI_API_CLIENT_SECRET: ${{ secrets.SENTI_API_CLIENT_SECRET }}
-          DART_API_URL: ${{ secrets.DART_API_URL }}
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
           APP_KEY: ${{ secrets.APP_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           
