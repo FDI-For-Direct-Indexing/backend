@@ -21,13 +21,9 @@ var accessToken = null;
 async function getAccessToken() {
   try {
     if (accessToken) {
-      console.log("기존 액세스 토큰 재사용");
-      console.log("Access Token:", accessToken);
       return accessToken;
     }
-    console.log("새 액세스 토큰 발급");
     const response = await axios.post(apiURL, requestData, { headers });
-    console.log("Access Token:", response.data.access_token);
     accessToken = response.data.access_token;
     return accessToken;
   } catch (error) {
