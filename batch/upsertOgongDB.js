@@ -41,7 +41,7 @@ async function saveToDatabase(data) {
   session.startTransaction();
 
   try {
-    const operations = data.map(item => {
+    for (const item of data) {
       const corporate = new Corporate({
         code: item.stock_code,
         name: item.corp_name,
@@ -54,10 +54,9 @@ async function saveToDatabase(data) {
         ogong_cnt: 0,
       });
 
-      return corporate.save({ session });
-    });
+      await corporate.save({ session });
+    }
 
-    await Promise.all(operations); // 모든 저장 작업을 병렬로 실행
     await session.commitTransaction();
     console.log("All data has been successfully saved to the Ogong database.");
   } catch (error) {
