@@ -5,13 +5,14 @@ const accessComment = async (code, message) => {
   try {
     // 감정분석을 위한 API 호출
     const sentiment = await callSentimentAnalysisAPI(message);
-    
+
     if (sentiment == null || sentiment == undefined || sentiment == "") {
       console.log('sentiment is null. 감정분석 실패');
       return;
     }
     // 감정분석 결과를 오공지수에 업데이트
     const result = await updateOgongRate(code, sentiment);
+    console.log('감정분석 결과: ', result);
     return result;
 
   } catch (error) {
@@ -29,11 +30,12 @@ const callSentimentAnalysisAPI = async (message) => {
       headers: {
         'X-NCP-APIGW-API-KEY-ID': process.env.SENTI_API_CLIENT_ID,
         'X-NCP-APIGW-API-KEY': process.env.SENTI_API_CLIENT_SECRET,
-        'Content-Type': 'application/json' }
+        'Content-Type': 'application/json'
+      }
     };
     const sentiment = await new Promise((resolve, reject) => {
       request.post(options, function (error, response, body) {
-        if (error){
+        if (error) {
           reject(error);
         } else {
           try {
@@ -65,10 +67,10 @@ const updateOgongRate = async (code, sentiment) => {
   if (!corporate.ogong_cnt) {
     corporate.ogong_cnt = 20;
   }
-  if (sentiment == null){
+  if (sentiment == null) {
     return;
   }
-  ogongRate = corporate.ogong_rate * corporate.ogong_cnt / (corporate.ogong_cnt + 1) + sentiment / (corporate.ogong_cnt + 1); 
+  ogongRate = corporate.ogong_rate * corporate.ogong_cnt / (corporate.ogong_cnt + 1) + sentiment / (corporate.ogong_cnt + 1);
   corporate.ogong_rate = ogongRate;
   corporate.ogong_cnt += 1;
   await corporate.save();
