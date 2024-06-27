@@ -27,8 +27,6 @@ ws.on("open", async function open() {
       : issueApprovalKey());
 
     for (let code of currentBatch) {
-      console.log("Requesting stock data for code:", code);
-
       const message = JSON.stringify({
         header: {
           approval_key: approval_key,
