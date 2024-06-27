@@ -49,10 +49,14 @@ const handleChatSocketConnection = (io) => {
         io.to(roomCode).emit("receive message", message);
 
         // 짧은 메세지는 감정분석을 거치지 않는다
-        if (content.length > 10) {
+        if (content.length > 5) {
           // 메시지를 받은 방에 있는 모든 클라이언트에게 오공지수 업데이트
+
           const updatedOgong = await accessComment(roomCode, content);
-          io.to(roomCode).emit("update ogong rate", updatedOgong);
+          console.log("updatedOgong: ", updatedOgong);
+          if (updatedOgong) {
+            io.to(roomCode).emit("update ogong rate", updatedOgong);
+          }
         }
 
         // 메시지를 보낸 클라이언트에게 전송 완료 피드백

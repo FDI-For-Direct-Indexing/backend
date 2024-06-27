@@ -66,7 +66,7 @@ function matchIdWithPcaResult(pca, ids, features, sliderValue) {
 }
 
 function kmeansClustering(result) {
-  return kmeans(result, 5);
+  return kmeans(result, 4);
 }
 
 const getCorporateData = async () => {
@@ -83,7 +83,7 @@ const getCorporateData = async () => {
 };
 
 async function getClusterResultResponse(result, kmeans) {
-  const clusterResult = Array.from({ length: 5 }, (_, id) => ({
+  const clusterResult = Array.from({ length: 4 }, (_, id) => ({
     id,
     data: [],
   }));

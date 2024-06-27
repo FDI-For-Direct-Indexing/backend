@@ -74,8 +74,8 @@ const getStockFundamentals = async (code) => {
       ogong_rate: corporate.ogong_rate,
 
       profit: profit,
-      growth: growth,
       stability: stability,
+      growth: growth,
       efficiency: efficiency,
     };
 

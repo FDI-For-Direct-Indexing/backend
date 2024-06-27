@@ -6,13 +6,11 @@ const accessComment = async (code, message) => {
     // 감정분석을 위한 API 호출
     const sentiment = await callSentimentAnalysisAPI(message);
 
-    if (sentiment == null || sentiment == undefined || sentiment == "") {
-      console.log('sentiment is null. 감정분석 실패');
+    if (sentiment === null || sentiment === undefined || sentiment === "") {
       return;
     }
     // 감정분석 결과를 오공지수에 업데이트
     const result = await updateOgongRate(code, sentiment);
-    console.log('감정분석 결과: ', result);
     return result;
 
   } catch (error) {
@@ -48,11 +46,11 @@ const callSentimentAnalysisAPI = async (message) => {
       });
     });
 
-    if (sentiment == 'positive') {
+    if (sentiment === "positive") {
       return 100;
-    } else if (sentiment == 'neutral') {
+    } else if (sentiment === "neutral") {
       return 50;
-    } else if (sentiment == 'negative') {
+    } else if (sentiment === "negative") {
       return 0;
     } else {
       return null;
