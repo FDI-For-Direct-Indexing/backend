@@ -60,5 +60,5 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install 22.0.0
             nvm use 22.0.0
-            npm i --force
+            npm i --package-lock-only
             pm2 start ./bin/www --name app
