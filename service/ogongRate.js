@@ -51,7 +51,7 @@ const callSentimentAnalysisAPI = async (message) => {
     } else if (sentiment === "neutral") {
       return 50;
     } else if (sentiment === "negative") {
-      return 0;
+      return 1;
     } else {
       return null;
     }
@@ -62,12 +62,7 @@ const callSentimentAnalysisAPI = async (message) => {
 
 const updateOgongRate = async (code, sentiment) => {
   const corporate = await Corporate.findOne({ code: code });
-  if (!corporate.ogong_cnt) {
-    corporate.ogong_cnt = 20;
-  }
-  if (sentiment == null) {
-    return;
-  }
+
   ogongRate = corporate.ogong_rate * corporate.ogong_cnt / (corporate.ogong_cnt + 1) + sentiment / (corporate.ogong_cnt + 1);
   corporate.ogong_rate = ogongRate;
   corporate.ogong_cnt += 1;
