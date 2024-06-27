@@ -24,9 +24,9 @@ async function readCSV(filePath) {
   });
 }
 
-async function deleteAllStockData() {
+async function deleteAllStockData(session) {
   try {
-    await Stock.deleteMany({});
+    await Stock.deleteMany({}).session(session);
     console.log("All existing Stock data has been deleted.");
   } catch (error) {
     console.error("An error occurred while deleting the Stock data:", error);
@@ -34,20 +34,19 @@ async function deleteAllStockData() {
   }
 }
 
-async function saveStockData(data) {
-  const session = await monkeyRankingDbConnection.startSession();
-  session.startTransaction();
-
+async function saveStockData(data, session) {
   try {
-    const operations = [];
+    // 모든 Corporate 문서를 메모리에 로드
+    const corporates = await Corporate.find().session(session);
+    const corporateMap = new Map();
+    corporates.forEach(corporate => {
+      corporateMap.set(corporate.code, corporate._id);
+    });
 
     for (const item of data) {
-      // Corporate 컬렉션에서 stock_code로 문서 찾기
-      const corporate = await Corporate.findOne({
-        code: item.stock_code,
-      }).session(session);
+      const corporateId = corporateMap.get(item.stock_code);
 
-      if (!corporate) {
+      if (!corporateId) {
         console.error(
           `No matching corporate found for stock_code: ${item.stock_code}`
         );
@@ -65,35 +64,38 @@ async function saveStockData(data) {
         asset_turnover: parseFloat(item.asset_turnover),
         debt_turnover: parseFloat(item.debt_turnover),
         capital_turnover: parseFloat(item.capital_turnover),
-        corporate_id: corporate._id, // Corporate 컬렉션의 _id 값을 설정
+        corporate_id: corporateId, // Corporate 컬렉션의 _id 값을 설정
       });
 
-      operations.push(stock.save({ session }));
+      await stock.save({ session }); // 각 항목을 순차적으로 저장
     }
 
-    await Promise.all(operations); // 모든 저장 작업을 병렬로 실행
-    await session.commitTransaction();
     console.log("All stock data has been successfully saved to the database.");
   } catch (error) {
-    await session.abortTransaction();
     console.error(
       "An error occurred while saving stock data to the database:",
       error
     );
     throw error;
-  } finally {
-    session.endSession();
   }
 }
 
 async function upsertOgongDetailDataToMongo() {
+  const session = await monkeyRankingDbConnection.startSession();
+  session.startTransaction();
+
   try {
-    await deleteAllStockData();
+    await deleteAllStockData(session);
     const data = await readCSV(inputFilePath);
-    await saveStockData(data);
+    await saveStockData(data, session);
+
+    await session.commitTransaction();
   } catch (error) {
+    await session.abortTransaction();
     console.error("An error occurred:", error);
     throw error;
+  } finally {
+    session.endSession();
   }
 }
 

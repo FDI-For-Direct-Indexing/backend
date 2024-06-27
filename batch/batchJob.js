@@ -18,8 +18,6 @@ async function runBatchJob() {
     await configureOgongDataCSV();
     await upsertOgongDataToMongo();
     await upsertOgongDetailDataToMongo();
-
-    console.log("끝났나요?");
   } catch (err) {
     handleError(err);
   }

@@ -81,7 +81,14 @@ async function downloadFile(otp) {
       return;
     }
 
-    const outputPath = path.resolve(__dirname, "data", "kospi200list.csv");
+    const outputDir = path.resolve(__dirname, "data");
+    const outputPath = path.join(outputDir, "kospi200list.csv");
+
+    // 디렉토리가 없는 경우 생성 (비동기)
+    if (!fs.existsSync(outputDir)) {
+      await fs.promises.mkdir(outputDir, { recursive: true });
+    }
+
     const writer = fs.createWriteStream(outputPath);
 
     // 스트림 완료를 기다리기 위한 Promise 사용
