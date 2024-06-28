@@ -7,6 +7,7 @@ const {
   getPriceOfStock,
   getCompareOfStock,
 } = require("./koreainvestmentAPI/kisSocket");
+const { updateOgongRate } = require("./clusterCache");
 
 const handleChatSocketConnection = (io) => {
   io.on("connection", (socket) => {
@@ -53,7 +54,8 @@ const handleChatSocketConnection = (io) => {
           // 메시지를 받은 방에 있는 모든 클라이언트에게 오공지수 업데이트
 
           const updatedOgong = await accessComment(roomCode, content);
-          console.log("updatedOgong: ", updatedOgong);
+          // 메인페이지에서 사용될 캐싱 데이터도 업데이트
+          updateOgongRate(roomCode, updatedOgong);
           if (updatedOgong) {
             io.to(roomCode).emit("update ogong rate", updatedOgong);
           }
