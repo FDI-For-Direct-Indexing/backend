@@ -37,8 +37,8 @@ const callSentimentAnalysisAPI = async (message) => {
           reject(error);
         } else {
           try {
-            const sentimentValue = body.document.sentiment;
-            resolve(sentimentValue);
+            const value = body.document.confidence;
+            resolve(value);
           } catch (e) {
             reject(e);
           }
@@ -46,12 +46,8 @@ const callSentimentAnalysisAPI = async (message) => {
       });
     });
 
-    if (sentiment === "positive") {
-      return 100;
-    } else if (sentiment === "neutral") {
-      return 50;
-    } else if (sentiment === "negative") {
-      return 0.01;
+    if (sentiment) {
+      return sentiment.positive + sentiment.neutral * 0.5;
     } else {
       return null;
     }
