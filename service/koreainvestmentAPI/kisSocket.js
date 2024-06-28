@@ -13,7 +13,7 @@ let compares = [{}];
 ws.on("open", async function open() {
   console.log("KIS WebSocket connection opened");
 
-  const batchSize = 41; // 한 번에 요청할 종목 수
+  const batchSize = 40; // 한 번에 요청할 종목 수
   const numBatches = Math.ceil(codeList.length / batchSize); // 필요한 배치 수 계산
 
   for (let batch = 0; batch < numBatches; batch++) {
@@ -21,10 +21,7 @@ ws.on("open", async function open() {
     const endIndex = Math.min((batch + 1) * batchSize, codeList.length);
     const currentBatch = codeList.slice(startIndex, endIndex);
 
-    // 새로운 접근키를 가져오는 함수 호출
-    const approval_key = await (batch === 0
-      ? getStoredApprovalKey()
-      : issueApprovalKey());
+    const approval_key = await issueApprovalKey();
 
     for (let code of currentBatch) {
       const message = JSON.stringify({
@@ -41,6 +38,7 @@ ws.on("open", async function open() {
           },
         },
       });
+      console.log(approval_key, code);
       ws.send(message);
     }
   }
@@ -52,21 +50,36 @@ var key = null;
 
 ws.on("message", async function incoming(data) {
   const responseData = data.toString("utf8");
-  const parsedData = JSON.parse(responseData);
 
-  if (firstConnection) {
-    if (parsedData.header.tr_id === "PINGPONG") {
-      console.log("Received PINGPONG");
-    } else if (parsedData.body.msg1 === "SUBSCRIBE SUCCESS") {
-      console.log("Subscription successful");
-      iv = parsedData.body.output.iv;
-      key = parsedData.body.output.key;
-      firstConnection = false;
+  // JSON 형식인지 확인
+  if (responseData.startsWith("{") && responseData.endsWith("}")) {
+    try {
+      const parsedData = JSON.parse(responseData);
+
+      if (firstConnection) {
+        if (parsedData.header.tr_id === "PINGPONG") {
+          console.log("Received PINGPONG");
+        } else if (parsedData.body.msg1 === "SUBSCRIBE SUCCESS") {
+          console.log("Subscription successful");
+          iv = parsedData.body.output.iv;
+          key = parsedData.body.output.key;
+          firstConnection = false;
+        }
+      } else {
+        if (parsedData.header.tr_id === "PINGPONG") {
+          console.log("Received PINGPONG");
+        } else if (parsedData.body.msg1 === "SUBSCRIBE SUCCESS") {
+          console.log("Subscription successful");
+        }
+      }
+    } catch (jsonError) {
+      console.error("Failed to parse JSON:", responseData, jsonError);
     }
   } else {
-    const fields = responseData.split("|");
-
+    // JSON 형식이 아닌 경우
+    let fields = responseData.split("|");
     if (fields[1] === "H0STCNT0" && fields.length > 3) {
+      let stockData;
       if (fields[0] === "0") {
         // 암호화되지 않은 데이터
         stockData = await processStockData(fields[3]);

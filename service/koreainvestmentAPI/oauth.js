@@ -24,7 +24,8 @@ function getStoredApprovalKey(approval_key) {
 }
 
 async function issueApprovalKey() {
-  return await getApprovalKey();
+  const approval_key = await getApprovalKey();
+  return approval_key;
 }
 
 module.exports = { getApprovalKey, getStoredApprovalKey, issueApprovalKey };

@@ -24,7 +24,6 @@ const updatePrices = async () => {
 // 장 시작 시 전날 데이터 삭제 및 웹소켓 연결 시작
 cron.schedule("0 9 * * 1-5", async () => {
   console.log("Starting market day: Deleting previous day data");
-  await Price.deleteMany({});
 });
 
 // 장 마감 10분 전, 웹소켓 연결 종료
