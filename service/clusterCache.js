@@ -3,7 +3,7 @@ const Corporate = require("../models/Corporate");
 const cache = {
   corporateData: null,
   lastFetch: 0,
-  ttl: 1000 * 60 * 60, // 1 hour
+  ttl: 1000 * 60 * 5, // 5 min
 };
 
 const getCorporateData = async () => {
@@ -24,8 +24,8 @@ const updateOgongRate = async (code, ogongValue) => {
 
   // Update cache
   if (cache.corporateData[code]) {
-    cache.corporateData[code].ogongRate = ogongValue;
+    cache.corporateData[code].ogong_rate = ogongValue;
   }
 }
 
-module.exports = { getCorporateData, updateOgongRate }
+module.exports = { cache, getCorporateData, updateOgongRate }

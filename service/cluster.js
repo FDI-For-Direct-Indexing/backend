@@ -1,12 +1,7 @@
 const { PCA } = require("ml-pca");
 const { kmeans } = require("ml-kmeans");
 const Corporate = require("../models/Corporate");
-
-const cache = {
-  corporateData: null,
-  lastFetch: 0,
-  ttl: 1000 * 60 * 60, // 1 hour
-};
+const { cache, getCorporateData } = require("./clusterCache");
 
 const getClusterResult = async (stockList, sliderValue) => {
   const ids = [];
@@ -69,18 +64,6 @@ function kmeansClustering(result) {
   return kmeans(result, 4);
 }
 
-const getCorporateData = async () => {
-  const now = Date.now();
-  if (!cache.corporateData || (now - cache.lastFetch) > cache.ttl) {
-    const corporates = await Corporate.find({});
-    cache.corporateData = corporates.reduce((map, corp) => {
-      map[corp.code] = corp;
-      return map;
-    }, {});
-    cache.lastFetch = now;
-  }
-  return cache.corporateData;
-};
 
 async function getClusterResultResponse(result, kmeans) {
   const clusterResult = Array.from({ length: 4 }, (_, id) => ({
@@ -89,7 +72,6 @@ async function getClusterResultResponse(result, kmeans) {
   }));
 
   const corporateData = await getCorporateData();
-
   // 클러스터에 대한 id 매핑
   await Promise.all(kmeans.clusters.map(async (cluster, index) => {
     const corp = corporateData[result[index][0]];
