@@ -13,4 +13,9 @@ router.get("/recent", async (req, res) => {
   return res.json(cartItems);
 });
 
+router.post("/", async (req, res) => {
+  const savedCart = await cart.addCart(req.body.code, req.body.userId);
+  return res.status(201).json(savedCart);
+});
+
 module.exports = router;
