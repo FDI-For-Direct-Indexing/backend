@@ -38,7 +38,6 @@ ws.on("open", async function open() {
           },
         },
       });
-      console.log(approval_key, code);
       ws.send(message);
     }
   }
@@ -98,7 +97,7 @@ ws.on("message", async function incoming(data) {
         compares[stockData[0]] = stockData[2];
       }
     } else {
-      console.log("Received non-trading data, ignoring:", responseData);
+      console.log("Received non-trading data");
     }
   }
 });

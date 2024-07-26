@@ -99,11 +99,6 @@ const handlePriceSocketConnection = (io) => {
 
       let status = false;
       if (getPriceOfStock(stockCode)) {
-        console.log(
-          stockCode,
-          "Using stored price data:",
-          getPriceOfStock(stockCode)
-        );
         status = true;
       }
 
@@ -124,7 +119,6 @@ const handlePriceSocketConnection = (io) => {
             const price = getPriceOfStock(stockCode);
             const compare = getCompareOfStock(stockCode);
             if (!price) {
-              console.log("price: ", price);
               return socket.emit("error", "Failed to get current price");
             }
             socket.emit("current price", {
