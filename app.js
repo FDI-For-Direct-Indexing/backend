@@ -8,11 +8,13 @@ const axios = require("axios");
 
 var errorHandler = require("./common/error/ErrorHandler");
 var indexRouter = require("./routes/index");
+const trendRouter = require("./routes/trend");
 var stocksRouter = require("./routes/stocks");
 const clusterRouter = require("./routes/cluster");
 const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
 const realtimePriceRouter = require("./routes/realtimePrice");
+const cartRouter = require("./routes/cart");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -88,6 +90,8 @@ app.use("/api/corporates", corporateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/realtimePrice", realtimePriceRouter);
+app.use("/api/trend", trendRouter);
+app.use("/api/cart", cartRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

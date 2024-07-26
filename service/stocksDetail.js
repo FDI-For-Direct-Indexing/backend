@@ -10,29 +10,25 @@ const getStockFundamentals = async (code) => {
     const profit_key = ["영업이익률", "ROA", "ROE"];
     const stability_key = ["유동비율", "부채비율"];
     const growth_key = ["매출액증가율", "영업이익증가율"];
-    const efficiency_key = [
-      "총자산회전율",
-      "총부채회전율",
-      "총자본회전율",
-    ];
+    const efficiency_key = ["총자산회전율", "총부채회전율", "총자본회전율"];
 
     const profit_value = [
-      (stock.op_profit_margin).toFixed(1),
-      (stock.roa).toFixed(1),
-      (stock.roe).toFixed(1),
+      stock.op_profit_margin.toFixed(1),
+      stock.roa.toFixed(1),
+      stock.roe.toFixed(1),
     ];
     const stability_value = [
-      (stock.cur_ratio).toFixed(1),
-      (stock.debt_eq_ratio).toFixed(1)
+      stock.cur_ratio.toFixed(1),
+      stock.debt_eq_ratio.toFixed(1),
     ];
     const growth_value = [
-      (stock.sales_growth_rate).toFixed(1),
-      (stock.op_income_growth_rate).toFixed(1)
+      stock.sales_growth_rate.toFixed(1),
+      stock.op_income_growth_rate.toFixed(1),
     ];
     const efficiency_value = [
-      (stock.asset_turnover).toFixed(1),
-      (stock.debt_turnover).toFixed(1),
-      (stock.capital_turnover).toFixed(1)
+      stock.asset_turnover.toFixed(1),
+      stock.debt_turnover.toFixed(1),
+      stock.capital_turnover.toFixed(1),
     ];
 
     const profit = [];
