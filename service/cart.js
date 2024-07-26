@@ -21,6 +21,35 @@ const getCartList = async (user_id) => {
         };
       })
     );
+
+    return cartItems;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getRecentCart = async (userId) => {
+  try {
+    const cartItems = await Cart.find({ user_id: userId })
+      .sort({ createdAt: -1 })
+      .limit(2);
+
+    const items = await Promise.all(
+      cartItems.map(async (cart) => {
+        const corporate = await Corporate.findById(cart.corporate_id);
+        const price = await Price.findOne({ corporate_id: corporate._id });
+
+        return {
+          name: corporate.name,
+          price: price.price,
+        };
+      })
+    );
+    return items;
+  } catch (error) {
+    return error;
+  }
+};
 module.exports = {
   getCartList,
 };
