@@ -65,6 +65,34 @@ const addCart = async (code, user_id) => {
     return error;
   }
 };
+
+const deleteCart = async (code, user_id) => {
+  try {
+    const corporate = await Corporate.findOne({ code });
+    if (!corporate) {
+      throw new Error(`Corporate not found for code: ${code}`);
+    }
+
+    const cart = await Cart.findOneAndDelete({
+      corporate_id: corporate._id,
+      user_id: user_id,
+    });
+
+    if (!cart) {
+      throw new Error(
+        `Cart not found for user_id: ${user_id} and corporate_id: ${corporate._id}`
+      );
+    }
+
+    return cart;
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
 module.exports = {
   getCartList,
+  getRecentCart,
+  addCart,
+  deleteCart,
 };

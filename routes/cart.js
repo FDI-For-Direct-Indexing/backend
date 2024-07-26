@@ -18,4 +18,26 @@ router.post("/", async (req, res) => {
   return res.status(201).json(savedCart);
 });
 
+router.delete("/", async (req, res) => {
+  const items = req.body;
+
+  if (!Array.isArray(items)) {
+    return res.status(400).json({
+      error:
+        "Invalid input. Request body should be an array of objects with 'code' and 'userId' properties.",
+    });
+  }
+
+  try {
+    const deletePromises = items.map((item) =>
+      cart.deleteCart(item.code, item.userId)
+    );
+    const deletedCarts = await Promise.all(deletePromises);
+
+    return res.json(deletedCarts);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
