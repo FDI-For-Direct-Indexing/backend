@@ -51,13 +51,13 @@ const getRecentCart = async (userId) => {
   }
 };
 
-const addCart = async (code, user_id) => {
+const addCart = async (code, userId) => {
   try {
     // code에 해당하는 Corporate 객체를 가져옴
     const corporate = await Corporate.findOne({ code });
     const cart = await Cart.create({
       corporate_id: corporate._id,
-      user_id: user_id,
+      user_id: userId,
     });
 
     return cart;
