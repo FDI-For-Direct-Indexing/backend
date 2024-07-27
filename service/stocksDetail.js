@@ -101,19 +101,16 @@ const getStockNews = async (stockName) => {
       },
     });
 
-    console.log("Response data saved to response.html");
 
     const data = response.data;
     const $ = cheerio.load(data);
     const newsList = $("ul.c-list-basic > li");
-    console.log("newsList length:", newsList.length); // 뉴스 리스트의 길이 확인
 
     const newsParsed = newsList
       .map((i, el) => {
         return parseNews($(el));
       })
       .get();
-    console.log("newsParsed:", newsParsed); // 파싱된 뉴스 목록 확인
 
     return newsParsed.slice(0, 5);
   } catch (error) {
