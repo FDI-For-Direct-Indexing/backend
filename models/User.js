@@ -14,6 +14,5 @@ const UserSchema = new mongoose.Schema(
 );
 
 const User = monkeyRankingDbConnection.model("User", UserSchema);
-UserSchema.index({ code: 1 });
 
 module.exports = User;

@@ -15,6 +15,7 @@ const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
 const realtimePriceRouter = require("./routes/realtimePrice");
 const cartRouter = require("./routes/cart");
+const usersRouter = require("./routes/user");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -92,6 +93,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/realtimePrice", realtimePriceRouter);
 app.use("/api/trend", trendRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/users", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
