@@ -41,6 +41,9 @@ const { updatePrices } = require("./service/koreainvestmentAPI/tradingSession");
 //   });
 // })();
 
+const { saveMentionsForAllCorporates } = require("./service/trendMention");
+saveMentionsForAllCorporates();
+
 const { CLIENT_URL } = process.env;
 
 const whitelist = ["http://localhost:3000", CLIENT_URL];
