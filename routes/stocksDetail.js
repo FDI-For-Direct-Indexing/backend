@@ -98,4 +98,10 @@ router.get("/:code", async function (req, res, next) {
   return res.json(stockInfo);
 });
 
+router.get("/proxy/news", async (req, res) => {
+  const stockName = req.query.stockName;
+  const news = await stocks.getStockNews(stockName);
+  res.json(news);
+});
+
 module.exports = router;
