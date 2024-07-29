@@ -31,6 +31,10 @@ const CorporateSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    mention: {
+      type: Number,
+      required: false,
+    },
     ogong_rate: {
       type: Number,
       required: false,

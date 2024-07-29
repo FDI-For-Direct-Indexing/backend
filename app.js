@@ -15,6 +15,7 @@ const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
 const realtimePriceRouter = require("./routes/realtimePrice");
 const cartRouter = require("./routes/cart");
+const usersRouter = require("./routes/user");
 const associateRouter = require("./routes/associate");
 
 const swaggerUi = require("swagger-ui-express");
@@ -29,17 +30,12 @@ const cron = require("node-cron");
 const { runBatchJob } = require("./batch/batchJob");
 const { updatePrices } = require("./service/koreainvestmentAPI/tradingSession");
 //batch
-(async () => {
-  console.log("Running batch job immediately");
+cron.schedule("0 0 1 3,6,9,12 *", async () => {
+  // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
+  console.log("Running batch job every 3 months");
   await runBatchJob();
   await updatePrices();
-  cron.schedule("0 0 1 3,6,9,12 *", async () => {
-    // 3개월마다 실행 (매년 3월, 6월, 9월, 12월의 1일 00:00:00에 실행)
-    console.log("Running batch job every 3 months");
-    await runBatchJob();
-    await updatePrices();
-  });
-})();
+});
 
 const { CLIENT_URL } = process.env;
 
@@ -91,6 +87,7 @@ app.use("/api/corporates", corporateRouter);
 app.use("/api/realtimePrice", realtimePriceRouter);
 app.use("/api/trend", trendRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/users", usersRouter);
 app.use("/api/associate", associateRouter);
 app.use(errorHandler);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
