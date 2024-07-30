@@ -5,16 +5,19 @@ const SectorSchema = new mongoose.Schema(
   {
     corporates_code: {
       type: String,
-      require: true,
+      required: true,
     },
     sector: {
       type: String,
-      require: true,
+      required: true,
     },
+  },
+  {
+    timestamps: true,
   }
 );
 
 const Sector = monkeyRankingDbConnection.model("Sector", SectorSchema);
-SectorSchema.index({ corporates_code: 1 });
+SectorSchema.index({ code: 1 });
 
 module.exports = Sector;

@@ -15,6 +15,7 @@ const stocksDetailRouter = require("./routes/stocksDetail");
 const corporateRouter = require("./routes/corporates");
 const realtimePriceRouter = require("./routes/realtimePrice");
 const cartRouter = require("./routes/cart");
+const sectorRouter = require("./routes/sector");
 const usersRouter = require("./routes/user");
 const associateRouter = require("./routes/associate");
 
@@ -87,6 +88,7 @@ app.use("/api/corporates", corporateRouter);
 app.use("/api/realtimePrice", realtimePriceRouter);
 app.use("/api/trend", trendRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/sector", sectorRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/associate", associateRouter);
 app.use(errorHandler);
