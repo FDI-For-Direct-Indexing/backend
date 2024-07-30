@@ -28,3 +28,34 @@ const getStocksBySector = async (sector) => {
     return error;
   }
 };
+
+const getCartItemsBySector = async (userId, reqSector) => {
+  try {
+    const cartItems = await Cart.find({ user_id: userId });
+    const response = await Promise.all(
+      cartItems.map(async (cart) => {
+        const corporate = await Corporate.findOne({ _id: cart.corporate_id });
+        const sector = await Sector.findOne({
+          corporates_code: corporate.code,
+        });
+        if (sector.sector !== reqSector) {
+          return null;
+        }
+        const price = await Price.findOne({ corporate_id: corporate._id });
+
+        return {
+          code: corporate.code,
+          name: corporate.name,
+          price: price.price,
+          compare: price.compare,
+        };
+      })
+    );
+
+    return response.filter((item) => item !== null);
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports = { getStockSector, getStocksBySector, getCartItemsBySector };

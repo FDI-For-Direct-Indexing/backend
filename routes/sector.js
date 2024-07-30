@@ -8,4 +8,11 @@ router.get("/all", async (req, res) => {
   res.json(sectors);
 });
 
+router.get("/cart", async (req, res) => {
+  const userId = req.query.id;
+  const reqSector = req.query.sector;
+  const cartItems = await sector.getCartItemsBySector(userId, reqSector);
+  res.json(cartItems);
+});
+
 module.exports = router;
