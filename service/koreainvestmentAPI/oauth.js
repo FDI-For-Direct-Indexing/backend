@@ -14,7 +14,6 @@ async function getApprovalKey() {
   };
 
   const response = await axios.post(url, body, { headers: headers });
-  console.log("한국투자증권 API OAuth 인증 성공");
   approval_key = response.data.approval_key;
   return approval_key;
 }

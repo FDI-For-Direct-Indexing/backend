@@ -1,6 +1,7 @@
 const Stock = require("../models/Stock");
 const Corporate = require("../models/Corporate");
-const Price = require("../models/Price");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 const getStockFundamentals = async (code) => {
   try {
@@ -81,6 +82,62 @@ const getStockFundamentals = async (code) => {
   }
 };
 
+const getStockNews = async (stockName) => {
+  try {
+    const response = await axios.get("https://search.daum.net/search", {
+      params: {
+        w: "news",
+        cluster: "y",
+        q: stockName,
+        p: 1,
+      },
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9,ko;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        Connection: "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+      },
+    });
+
+
+    const data = response.data;
+    const $ = cheerio.load(data);
+    const newsList = $("ul.c-list-basic > li");
+
+    const newsParsed = newsList
+      .map((i, el) => {
+        return parseNews($(el));
+      })
+      .get();
+
+    return newsParsed.slice(0, 5);
+  } catch (error) {
+    console.error("Error in getStockNews:", error);
+    return error;
+  }
+};
+
+function parseNews(newsElem) {
+  const press = newsElem.find(".c-tit-doc .tit_item").text().trim();
+  const titleAnchor = newsElem.find(".item-title a");
+  const title = titleAnchor.text().trim();
+  const url = titleAnchor.prop("href");
+  const date = newsElem
+    .find(".c-item-content .item-contents .txt_info")
+    .text()
+    .trim();
+
+  return {
+    press,
+    title,
+    url,
+    date,
+  };
+}
+
 module.exports = {
   getStockFundamentals,
+  getStockNews,
 };

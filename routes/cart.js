@@ -12,8 +12,8 @@ router.get("/:code", async (req, res) => {
   return res.json(cartItem);
 });
 
-router.get("/recent", async (req, res) => {
-  const userId = req.query.id;
+router.get("/:id/recent", async (req, res) => {
+  const userId = req.params.id;
   const cartItems = await cart.getRecentCart(userId);
   return res.json(cartItems);
 });
