@@ -1,4 +1,5 @@
 const Corporate = require("../models/Corporate");
+const Sector = require("../models/Sector");
 const Price = require("../models/Price");
 const Cart = require("../models/Cart");
 
@@ -11,9 +12,13 @@ const getCartList = async (user_id) => {
     const cartItems = await Promise.all(
       carts.map(async (cart) => {
         const corporate = await Corporate.findById(cart.corporate_id);
+        const sector = await Sector.findOne({
+          corporates_code: corporate.code,
+        });
         const price = await Price.findOne({ corporate_id: corporate._id });
 
         return {
+          sector: sector.sector,
           code: corporate.code,
           name: corporate.name,
           price: price.price,
