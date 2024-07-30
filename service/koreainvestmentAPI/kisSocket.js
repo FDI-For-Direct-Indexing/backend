@@ -59,7 +59,6 @@ ws.on("message", async function incoming(data) {
         if (parsedData.header.tr_id === "PINGPONG") {
           console.log("Received PINGPONG");
         } else if (parsedData.body.msg1 === "SUBSCRIBE SUCCESS") {
-          console.log("Subscription successful");
           iv = parsedData.body.output.iv;
           key = parsedData.body.output.key;
           firstConnection = false;
@@ -67,8 +66,6 @@ ws.on("message", async function incoming(data) {
       } else {
         if (parsedData.header.tr_id === "PINGPONG") {
           console.log("Received PINGPONG");
-        } else if (parsedData.body.msg1 === "SUBSCRIBE SUCCESS") {
-          console.log("Subscription successful");
         }
       }
     } catch (jsonError) {
