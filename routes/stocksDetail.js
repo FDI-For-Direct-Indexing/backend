@@ -1,8 +1,6 @@
 var express = require("express");
 const stocks = require("../service/stocksDetail");
 const router = express.Router();
-const { setCurrentStockCode } = require("../service/stocksDetail");
-const { onCodeRetrieved } = require("../service/koreainvestmentAPI/kisSocket");
 
 /**
  * @swagger

@@ -1,4 +1,5 @@
 const Corporate = require("../models/Corporate");
+const Sector = require("../models/Sector");
 const Price = require("../models/Price");
 const Cart = require("../models/Cart");
 
@@ -11,9 +12,13 @@ const getCartList = async (user_id) => {
     const cartItems = await Promise.all(
       carts.map(async (cart) => {
         const corporate = await Corporate.findById(cart.corporate_id);
+        const sector = await Sector.findOne({
+          corporates_code: corporate.code,
+        });
         const price = await Price.findOne({ corporate_id: corporate._id });
 
         return {
+          sector: sector.sector,
           code: corporate.code,
           name: corporate.name,
           price: price.price,
@@ -25,6 +30,37 @@ const getCartList = async (user_id) => {
     return cartItems;
   } catch (error) {
     return error;
+  }
+};
+
+const getStockFromCart = async (code, user_id) => {
+  try {
+    const corporate = await Corporate.findOne({ code });
+    if (!corporate) {
+      throw new Error(`Corporate not found for code: ${code}`);
+    }
+
+    const cart = await Cart.findOne({
+      corporate_id: corporate._id,
+      user_id,
+    });
+
+    if (!cart) {
+      throw new Error(
+        `Cart not found for user_id: ${user_id} and corporate_id: ${corporate._id}`
+      );
+    }
+
+    const price = await Price.findOne({ corporate_id: corporate._id });
+
+    return {
+      code: corporate.code,
+      name: corporate.name,
+      price: price.price,
+      compare: price.compare,
+    };
+  } catch (error) {
+    return { error: error.message };
   }
 };
 
@@ -92,6 +128,7 @@ const deleteCart = async (code, user_id) => {
 
 module.exports = {
   getCartList,
+  getStockFromCart,
   getRecentCart,
   addCart,
   deleteCart,
