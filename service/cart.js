@@ -33,6 +33,37 @@ const getCartList = async (user_id) => {
   }
 };
 
+const getStockFromCart = async (code, user_id) => {
+  try {
+    const corporate = await Corporate.findOne({ code });
+    if (!corporate) {
+      throw new Error(`Corporate not found for code: ${code}`);
+    }
+
+    const cart = await Cart.findOne({
+      corporate_id: corporate._id,
+      user_id,
+    });
+
+    if (!cart) {
+      throw new Error(
+        `Cart not found for user_id: ${user_id} and corporate_id: ${corporate._id}`
+      );
+    }
+
+    const price = await Price.findOne({ corporate_id: corporate._id });
+
+    return {
+      code: corporate.code,
+      name: corporate.name,
+      price: price.price,
+      compare: price.compare,
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
 const getRecentCart = async (userId) => {
   try {
     const cartItems = await Cart.find({ user_id: userId })
@@ -97,6 +128,7 @@ const deleteCart = async (code, user_id) => {
 
 module.exports = {
   getCartList,
+  getStockFromCart,
   getRecentCart,
   addCart,
   deleteCart,

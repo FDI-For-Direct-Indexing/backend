@@ -7,6 +7,11 @@ router.get("/", async (req, res) => {
   return res.json(cartList);
 });
 
+router.get("/:code", async (req, res) => {
+  const cartItem = await cart.getStockFromCart(req.params.code, req.query.id);
+  return res.json(cartItem);
+});
+
 router.get("/recent", async (req, res) => {
   const userId = req.query.id;
   const cartItems = await cart.getRecentCart(userId);
