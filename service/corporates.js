@@ -1,7 +1,7 @@
 const Corporate = require("../models/Corporate");
 const Sector = require("../models/Sector");
+const Mention = require("../models/Mention");
 const CustomError = require("../common/error/CustomError");
-
 
 const searchCorporate = async (keyword) => {
   const corporate = await Corporate.find({ name: keyword });
@@ -32,6 +32,7 @@ const getCorporates = async () => {
 
   const responsePromises = corporates.map(async (corporate) => {
     const savedSector = await Sector.findOne({ corporates_code: corporate.code });
+    const savedMention = await Mention.findOne({ corporate_id: corporate._id });
     return {
       id: corporate.code,
       name: corporate.name,
@@ -41,7 +42,7 @@ const getCorporates = async () => {
       safety: corporate.stability,
       efficiency: corporate.efficiency,
       oogong_rate: corporate.ogong_rate,
-      mention: corporate.mention,
+      mention: savedMention ? savedMention.amount : 0,
     };
   });
   
