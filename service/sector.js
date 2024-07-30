@@ -2,6 +2,22 @@ const Corporate = require("../models/Corporate");
 const Sector = require("../models/Sector");
 const Price = require("../models/Price");
 const Cart = require("../models/Cart");
+
+const getStockSector = async (code) => {
+  try {
+    const sector = await Sector.findOne({ corporates_code: code });
+
+    const response = {
+      code: sector.corporates_code,
+      sector: sector.sector,
+    };
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getStocksBySector = async (sector) => {
   try {
     const sectors = await Sector.find({ sector: sector });

@@ -15,4 +15,9 @@ router.get("/cart", async (req, res) => {
   res.json(cartItems);
 });
 
+router.get("/:code", async (req, res) => {
+  const response = await sector.getStockSector(req.params.code);
+  res.json(response);
+});
+
 module.exports = router;
