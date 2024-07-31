@@ -36,7 +36,6 @@ async function deleteAllStockData(session) {
 
 async function saveStockData(data, session) {
   try {
-    // 모든 Corporate 문서를 메모리에 로드
     const corporates = await Corporate.find().session(session);
     const corporateMap = new Map();
     corporates.forEach(corporate => {
@@ -50,7 +49,7 @@ async function saveStockData(data, session) {
         console.error(
           `No matching corporate found for stock_code: ${item.stock_code}`
         );
-        continue; // 매칭되는 corporate이 없으면 다음 항목으로 넘어감
+        continue;
       }
 
       const stock = new Stock({
@@ -64,10 +63,10 @@ async function saveStockData(data, session) {
         asset_turnover: parseFloat(item.asset_turnover),
         debt_turnover: parseFloat(item.debt_turnover),
         capital_turnover: parseFloat(item.capital_turnover),
-        corporate_id: corporateId, // Corporate 컬렉션의 _id 값을 설정
+        corporate_id: corporateId,
       });
 
-      await stock.save({ session }); // 각 항목을 순차적으로 저장
+      await stock.save({ session });
     }
 
     console.log("All stock data has been successfully saved to the database.");

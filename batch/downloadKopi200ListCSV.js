@@ -2,7 +2,6 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-// OTP 생성 요청
 async function generateOTP() {
   const url = "http://data.krx.co.kr/comm/fileDn/GenerateOTP/generate.cmd";
   const data = new URLSearchParams({
@@ -44,7 +43,6 @@ async function generateOTP() {
   }
 }
 
-// 파일 다운로드 요청
 async function downloadFile(otp) {
   const url = "http://data.krx.co.kr/comm/fileDn/download_csv/download.cmd";
   const data = new URLSearchParams({
@@ -84,14 +82,12 @@ async function downloadFile(otp) {
     const outputDir = path.resolve(__dirname, "data");
     const outputPath = path.join(outputDir, "kospi200list.csv");
 
-    // 디렉토리가 없는 경우 생성 (비동기)
     if (!fs.existsSync(outputDir)) {
       await fs.promises.mkdir(outputDir, { recursive: true });
     }
 
     const writer = fs.createWriteStream(outputPath);
 
-    // 스트림 완료를 기다리기 위한 Promise 사용
     await new Promise((resolve, reject) => {
       response.data.pipe(writer);
       writer.on("finish", resolve);
@@ -104,7 +100,6 @@ async function downloadFile(otp) {
   }
 }
 
-// 메인 함수 실행
 async function downloadKopi200ListCSV() {
   try {
     const otp = await generateOTP();
@@ -114,5 +109,4 @@ async function downloadKopi200ListCSV() {
   }
 }
 
-// 메인 함수 호출
 module.exports = { downloadKopi200ListCSV };

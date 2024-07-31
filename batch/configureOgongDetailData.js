@@ -27,11 +27,9 @@ const apiUrl = "https://opendart.fss.or.kr/api/fnlttSinglAcnt.json";
 const apiKey = process.env.DART_API_KEY;
 const reprtCode = "11011";
 
-// 현재 연도를 가져와서 전년도로 설정
 const currentYear = new Date().getFullYear();
 const bsnsYear = currentYear - 1;
 
-// 파일을 읽는 함수
 function readFile(filePath, encoding) {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, encoding, (err, data) => {
@@ -44,7 +42,6 @@ function readFile(filePath, encoding) {
   });
 }
 
-// CSV 파일로 저장하는 함수
 function writeCSV(filePath, data) {
   return new Promise((resolve, reject) => {
     const fields = [
@@ -77,7 +74,7 @@ function writeCSV(filePath, data) {
   });
 }
 
-// 재무 데이터를 가져오는 함수
+// fetch 재무 데이터
 async function fetchFinancialData(kospi200Code) {
   let results = [];
 
@@ -90,7 +87,6 @@ async function fetchFinancialData(kospi200Code) {
       if (response.data.status === "000") {
         const list = response.data.list;
 
-        // 각 항목 계산 함수 호출
         const curRatio = calculateCurRatio(list);
         const debtEqRatio = calculateDebtEqRatio(list);
         const salesGrowthRate = calculateSalesGrowthRate(list);
@@ -102,7 +98,6 @@ async function fetchFinancialData(kospi200Code) {
         const debtTurnover = calculateDebtTurnover(list);
         const capitalTurnover = calculateCapitalTurnover(list);
 
-        // 결과 객체 생성
         const result = {
           corp_code: company.corpCode,
           stock_code: company.stockCode,
@@ -124,14 +119,13 @@ async function fetchFinancialData(kospi200Code) {
         console.log(
           `API 응답 오류 for ${company.corpName}: ${response.data.message}`
         );
-        break; // 루프 중단
+        break;
       }
     } catch (error) {
       throw error;
     }
   }
 
-  // 정규화할 컬럼들
   const columnsToNormalize = [
     "cur_ratio",
     "debt_eq_ratio",
@@ -153,7 +147,6 @@ async function fetchFinancialData(kospi200Code) {
   return results;
 }
 
-// 전체 작업을 실행하는 함수
 async function configureOgongDetailCSV() {
   try {
     const kospi200CodeData = await readFile(ogongCorpListPath, "utf-8");
