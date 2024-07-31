@@ -2,43 +2,49 @@ const { PCA } = require("ml-pca");
 const { kmeans } = require("ml-kmeans");
 const Corporate = require("../models/Corporate");
 const { cache, getCorporateData } = require("./clusterCache");
+const { mentionCache, getMention, updateMention } = require("./mentionCache");
 
 const getClusterResult = async (stockList, sliderValue) => {
+  await updateMention();
+  console.log("클러스터 어디서 터지나 보자 0", mentionCache.mentionData);
+
+
   const ids = [];
   const features = [];
   stockList.forEach((stock) => {
     const { id, name, profitability, stability, activity, potential, ogoong_rate } = stock;
-    features.push([profitability, stability, activity, potential, ogoong_rate]);
+    console.log("잘봐 이거 멘션 가져온거다!", id, mentionCache.mentionData[id]);
+    features.push([profitability, stability, activity, potential, mentionCache.mentionData[id], ogoong_rate]);
     ids.push([id, name]);
   });
 
+  console.log("클러스터 어디서 터지나 보자 1");
   // match scale with min-max normalization
   const scaledFeatures = matchScale(features);
 
+  console.log("클러스터 어디서 터지나 보자 2");
   // analyze
   const pcaResult = transfromDimension(scaledFeatures);
 
-  // console.log(sliderValue);
+  console.log("클러스터 어디서 터지나 보자 3");
   // map demension and match id with pca result
   const pcaResultAndId = matchIdWithPcaResult(pcaResult, ids, features, sliderValue);
 
+  console.log("클러스터 어디서 터지나 보자 4");
   // kmeans clustering
   const kmeansResult = kmeansClustering(pcaResult);
 
+  console.log("클러스터 어디서 터지나 보자 5");
   // cluster to response
   const clusterResult = await getClusterResultResponse(
     pcaResultAndId,
     kmeansResult
   );
 
+  console.log("클러스터 어디서 터지나 보자 6");
   const averageData = await getAverageData(clusterResult);
 
-  const responseData = {
-    clusterResult,
-    averageData,
-  };
-
-  return responseData;
+  return { clusterResult, averageData };
 };
 
 function matchScale(features) {
@@ -87,26 +93,8 @@ async function getClusterResultResponse(result, kmeans) {
   });
 
   return clusterResult;
-  // const corporateData = await getCorporateData();
-  // // 클러스터에 대한 id 매핑
-  // await Promise.all(kmeans.clusters.map(async (cluster, index) => {
-  //   const corp = corporateData[result[index][0]];
-
-  //   clusterResult[cluster].data.push({
-  //     id: result[index][0],
-  //     name: result[index][1],
-  //     x: result[index][2],
-  //     y: result[index][3],
-  //     수익성: (corp.profitability).toFixed(1),   // profitability
-  //     안정성: (corp.stability).toFixed(1),       // stability
-  //     활동성: (corp.efficiency).toFixed(1),      // activity
-  //     생산성: (corp.growth).toFixed(1),          // potential
-  //     오공지수: (corp.ogong_rate).toFixed(1),    // ogoong_rate
-  //   });
-  // }));
 }
 
-// min-max normailzation
 function getMinMaxScale(features) {
   const allValues = features.flat();
   const min = Math.min(...allValues);
@@ -120,10 +108,11 @@ function getMinMaxScale(features) {
 async function getAverageData(clusterResult) {
   const averageData = Array.from({ length: 4 }, (_, id) => ({
     id,
-    data: [], // 그룹별 profitability, stability, activity, potential, ogoong_rate 평균
+    data: [], // 그룹별 profitability, stability, activity, potential, mention, ogoong_rate 평균
   }));
 
   const corporateData = await getCorporateData();
+
   await Promise.all(clusterResult.map(async (cluster) => {
     const rates = cluster.data.reduce(
       (acc, corp) => {
@@ -132,7 +121,7 @@ async function getAverageData(clusterResult) {
         acc[1] += corpData.stability;
         acc[2] += corpData.efficiency;
         acc[3] += corpData.growth;
-        acc[4] += 23; // corpData.mention;
+        acc[4] += mentionCache.mentionData[corp.id]; // corpData.mention;
         acc[5] += corpData.ogong_rate;
         return acc;
       },

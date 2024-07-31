@@ -2,6 +2,7 @@ const Corporate = require("../models/Corporate");
 const Sector = require("../models/Sector");
 const Mention = require("../models/Mention");
 const CustomError = require("../common/error/CustomError");
+const { mentionCache, getMention, updateMention } = require("./mentionCache");
 
 const searchCorporate = async (keyword) => {
   const corporate = await Corporate.find({ name: keyword });
@@ -28,24 +29,27 @@ const searchIncludedCorporate = async (keyword) => {
 };
 
 const getCorporates = async () => {
+  await updateMention();
   const corporates = await Corporate.find();
 
   const responsePromises = corporates.map(async (corporate) => {
     const savedSector = await Sector.findOne({ corporates_code: corporate.code });
-    const savedMention = await Mention.findOne({ corporate_id: corporate._id });
+    const savedMentionAmount = await mentionCache.mentionData[corporate.id];
+    // const savedMention = await Mention.findOne({ corporate_id: corporate._id });
+
     return {
       id: corporate.code,
       name: corporate.name,
-      sector: savedSector ? savedSector.sector: "기타",
+      sector: savedSector ? savedSector.sector : "기타",
       profit: corporate.profitability,
       growth: corporate.growth,
       safety: corporate.stability,
       efficiency: corporate.efficiency,
       oogong_rate: corporate.ogong_rate,
-      mention: savedMention ? savedMention.amount : 0,
+      mention: savedMentionAmount,
     };
   });
-  
+
   const response = await Promise.all(responsePromises);
   return response;
 };
