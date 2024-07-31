@@ -3,8 +3,12 @@ const cart = require("../service/cart");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const cartList = await cart.getCartList(req.query.id);
-  return res.json(cartList);
+  try {
+    const cartList = await cart.getCartList(req.query.id);
+    return res.json(cartList);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 router.get("/:code", async (req, res) => {
