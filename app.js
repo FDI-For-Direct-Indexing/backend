@@ -39,6 +39,9 @@ cron.schedule("0 0 1 3,6,9,12 *", async () => {
   await updatePrices();
 });
 
+const { saveMentionsForAllCorporates } = require("./service/trendMention");
+saveMentionsForAllCorporates();
+
 const { CLIENT_URL } = process.env;
 
 const whitelist = ["http://localhost:3000", CLIENT_URL];
