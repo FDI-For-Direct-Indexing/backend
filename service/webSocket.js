@@ -78,6 +78,10 @@ const handlePriceSocketConnection = (io) => {
       socket.join(roomCode);
       const corporate = await Corporate.findOne({ code: roomCode });
       const loadedPrice = await Price.findOne({ corporate_id: corporate._id });
+      if (!loadedPrice) {
+        return socket.emit("error", "Failed to get loaded price");
+      }
+
       socket.emit("load price", loadedPrice);
     });
 

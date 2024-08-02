@@ -5,13 +5,14 @@ const Cart = require("../models/Cart");
 
 const getCartList = async (user_id) => {
   try {
-    // user_id에 해당하는 모든 카트를 찾음
     const carts = await Cart.find({ user_id });
 
-    // 각 카트의 corporate_id로 Corporate 모델 객체를 가져옴
     const cartItems = await Promise.all(
       carts.map(async (cart) => {
         const corporate = await Corporate.findById(cart.corporate_id);
+        if (!corporate) {
+          return null;
+        }
         const sector = await Sector.findOne({
           corporates_code: corporate.code,
         });
@@ -21,15 +22,16 @@ const getCartList = async (user_id) => {
           sector: sector.sector,
           code: corporate.code,
           name: corporate.name,
-          price: price.price,
-          compare: price.compare,
+          price: price ? price.price : null,
+          compare: price ? price.compare : null,
         };
       })
     );
 
-    return cartItems;
+    return cartItems.filter((item) => item !== null);
   } catch (error) {
-    return error;
+    console.error("Error in getCartList:", error);
+    throw error;
   }
 };
 

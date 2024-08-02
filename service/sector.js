@@ -60,6 +60,7 @@ const getCartItemsBySector = async (userId, reqSector) => {
         const price = await Price.findOne({ corporate_id: corporate._id });
 
         return {
+          sector: sector.sector,
           code: corporate.code,
           name: corporate.name,
           price: price.price,
