@@ -5,7 +5,7 @@ const path = require("path");
 
 router.post("/", async (req, res) => {
   const data = JSON.stringify(req.body);
-  console.log(`Sending data to Python script: ${data}`); // 로그 추가
+  console.log(`Sending data to Python script: ${data}`);
 
   const pythonRoot = path.join(__dirname, "../myenv/bin/python");
   const scriptPath = path.join(__dirname, "../service/stock_backtest.py");

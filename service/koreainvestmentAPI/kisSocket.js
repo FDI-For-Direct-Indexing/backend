@@ -13,8 +13,8 @@ let compares = [{}];
 ws.on("open", async function open() {
   console.log("KIS WebSocket connection opened");
 
-  const batchSize = 40; // 한 번에 요청할 종목 수
-  const numBatches = Math.ceil(codeList.length / batchSize); // 필요한 배치 수 계산
+  const batchSize = 40;
+  const numBatches = Math.ceil(codeList.length / batchSize);
 
   for (let batch = 0; batch < numBatches; batch++) {
     const startIndex = batch * batchSize;
@@ -50,7 +50,6 @@ var key = null;
 ws.on("message", async function incoming(data) {
   const responseData = data.toString("utf8");
 
-  // JSON 형식인지 확인
   if (responseData.startsWith("{") && responseData.endsWith("}")) {
     try {
       const parsedData = JSON.parse(responseData);
@@ -72,15 +71,12 @@ ws.on("message", async function incoming(data) {
       console.error("Failed to parse JSON:", responseData, jsonError);
     }
   } else {
-    // JSON 형식이 아닌 경우
     let fields = responseData.split("|");
     if (fields[1] === "H0STCNT0" && fields.length > 3) {
       let stockData;
       if (fields[0] === "0") {
-        // 암호화되지 않은 데이터
         stockData = await processStockData(fields[3]);
       } else {
-        // 암호화된 데이터
         const decryptedData = decryptData(fields[3], key, iv);
         if (decryptedData) {
           stockData = await processStockData(decryptedData);
@@ -109,7 +105,6 @@ ws.on("close", function close() {
 
 function decryptData(data, key, iv) {
   try {
-    // AES-256 암호화된 데이터를 String 으로 복호화
     const bytes = CryptoJS.AES.decrypt(data, CryptoJS.enc.Base64.parse(key), {
       iv: CryptoJS.enc.Base64.parse(iv),
       mode: CryptoJS.mode.CBC,

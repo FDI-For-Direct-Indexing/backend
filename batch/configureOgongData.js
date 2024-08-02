@@ -93,7 +93,7 @@ async function configureOgongDataCSV() {
     await writeCSV(outputFilePath, data);
     console.log("OgongData has been successfully saved.");
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error("An error occurred writing csv:", error);
     throw error;
   }
 }

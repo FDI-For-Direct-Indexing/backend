@@ -39,7 +39,6 @@ async function getNaverChart(keywords, period) {
                 },
             }
         );
-        console.log("[ 네이버 트랜드 응답 ] >> ", response.data.results);
         return response.data.results;
     } catch (err) {
         throw err;
@@ -51,7 +50,7 @@ function saveMention(corporate_id, amount) {
         corporate_id: corporate_id,
         amount: amount,
     });
-    console.log(newMention, " memtion 객체가 만들어짐");
+
     try {
         newMention.save();
         console.log(corporate_id, amount, " Mention saved successfully");
@@ -69,7 +68,7 @@ async function dataIsToday() {
         }
 
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set to start of the day
+        today.setHours(0, 0, 0, 0);
 
         const isToday = mention.updatedAt >= today;
 
@@ -99,7 +98,6 @@ async function saveMentionsForAllCorporates() {
             const names = chunk.map(corp => corp.name);
             try {
                 const data = await getNaverChart(names, 1);
-                console.log('fetched Naver 5개씩', data);
 
                 await Promise.all(data.map((item, index) => {
                     saveMention(chunk[index]._id, item.data[0].ratio)

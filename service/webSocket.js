@@ -46,22 +46,16 @@ const handleChatSocketConnection = (io) => {
         const message = new Message({ senderId, content, roomId: room._id });
         await message.save();
 
-        // 방에 있는 모든 클라이언트에게 새 메시지 전송
         io.to(roomCode).emit("receive message", message);
 
-        // 짧은 메세지는 감정분석을 거치지 않는다
         if (content.length > 5) {
-          // 메시지를 받은 방에 있는 모든 클라이언트에게 오공지수 업데이트
-
           const updatedOgong = await accessComment(roomCode, content);
           if (updatedOgong) {
             io.to(roomCode).emit("update ogong rate", updatedOgong);
           }
-          // 메인페이지에서 사용될 캐싱 데이터도 업데이트
           await updateOgongRate(roomCode, updatedOgong);
         }
 
-        // 메시지를 보낸 클라이언트에게 전송 완료 피드백
         socket.emit("message sent", {
           status: "success",
           messageId: message._id,
@@ -72,7 +66,6 @@ const handleChatSocketConnection = (io) => {
       }
     });
 
-    // 클라이언트 연결 해제 시
     socket.on("disconnect", () => {
       console.log("Client disconnected");
     });
@@ -81,12 +74,8 @@ const handleChatSocketConnection = (io) => {
 
 const handlePriceSocketConnection = (io) => {
   io.on("connection", (socket) => {
-    console.log("New client connected");
-
     socket.on("join price room", async ({ roomCode }) => {
       socket.join(roomCode);
-      console.log(`Client joined price room ${roomCode}`);
-
       const corporate = await Corporate.findOne({ code: roomCode });
       const loadedPrice = await Price.findOne({ corporate_id: corporate._id });
       if (!loadedPrice) {
@@ -98,8 +87,6 @@ const handlePriceSocketConnection = (io) => {
 
     // 현재가 요청
     socket.on("request current price", async ({ stockCode }) => {
-      console.log(`Requesting current price for stockCode: ${stockCode}`);
-
       let status = false;
       if (getPriceOfStock(stockCode)) {
         status = true;

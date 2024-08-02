@@ -6,44 +6,51 @@ const { mentionCache, getMention, updateMention } = require("./mentionCache");
 
 const getClusterResult = async (stockList, sliderValue) => {
   await updateMention();
-  console.log("클러스터 어디서 터지나 보자 0", mentionCache.mentionData);
-
+  // console.log("클러스터 어디서 터지나 보자 0");
 
   const ids = [];
   const features = [];
   stockList.forEach((stock) => {
     const { id, name, profitability, stability, activity, potential, ogoong_rate } = stock;
-    console.log("잘봐 이거 멘션 가져온거다!", id, mentionCache.mentionData[id]);
-    features.push([profitability, stability, activity, potential, mentionCache.mentionData[id], ogoong_rate]);
+    // console.log("잘봐 이거 멘션 가져온거다!", id, mentionCache.mentionData[id]);
+    // console.log(id, name, typeof profitability, typeof stability, typeof activity, typeof potential, typeof ogoong_rate, typeof mentionCache.mentionData[id]);
+    features.push([
+      Number(profitability.toFixed(1)),
+      Number(stability.toFixed(1)),
+      Number(activity.toFixed(1)),
+      Number(potential.toFixed(1)),
+      mentionCache.mentionData[id] == undefined ? 10 : Number(mentionCache.mentionData[id]) * 10,
+      Number(ogoong_rate.toFixed(1))]);
     ids.push([id, name]);
   });
 
-  console.log("클러스터 어디서 터지나 보자 1");
+  // console.log("클러스터 어디서 터지나 보자 1");
   // match scale with min-max normalization
   const scaledFeatures = matchScale(features);
 
-  console.log("클러스터 어디서 터지나 보자 2");
+  // console.log("클러스터 어디서 터지나 보자 2");
   // analyze
   const pcaResult = transfromDimension(scaledFeatures);
 
-  console.log("클러스터 어디서 터지나 보자 3");
+  // console.log("클러스터 어디서 터지나 보자 3");
   // map demension and match id with pca result
   const pcaResultAndId = matchIdWithPcaResult(pcaResult, ids, features, sliderValue);
 
-  console.log("클러스터 어디서 터지나 보자 4");
+  // console.log("클러스터 어디서 터지나 보자 4");
   // kmeans clustering
   const kmeansResult = kmeansClustering(pcaResult);
 
-  console.log("클러스터 어디서 터지나 보자 5");
+  // console.log("클러스터 어디서 터지나 보자 5");
   // cluster to response
   const clusterResult = await getClusterResultResponse(
     pcaResultAndId,
     kmeansResult
   );
 
-  console.log("클러스터 어디서 터지나 보자 6");
+  // console.log("클러스터 어디서 터지나 보자 6", clusterResult);
   const averageData = await getAverageData(clusterResult);
 
+  // console.log("클러스터 어디서 터지나 보자 7");
   return { clusterResult, averageData };
 };
 
@@ -121,7 +128,8 @@ async function getAverageData(clusterResult) {
         acc[1] += corpData.stability;
         acc[2] += corpData.efficiency;
         acc[3] += corpData.growth;
-        acc[4] += mentionCache.mentionData[corp.id]; // corpData.mention;
+        acc[4] += mentionCache.mentionData[corp.id] == undefined ? 1 : Number(mentionCache.mentionData[corp.id]);
+        // acc[4] += mentionCache.mentionData[corp.id]; // corpData.mention;
         acc[5] += corpData.ogong_rate;
         return acc;
       },

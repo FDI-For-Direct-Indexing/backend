@@ -2,9 +2,9 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const unzipper = require("unzipper");
-require("dotenv").config(); // .env 파일에서 환경 변수를 로드합니다.
+require("dotenv").config();
 
-// DART API로부터 기업 코드를 다운로드하는 함수
+// DART API에서 기업 코드 다운로드
 async function downloadCorpCode() {
   const url = "https://opendart.fss.or.kr/api/corpCode.xml";
   const params = {
@@ -14,7 +14,7 @@ async function downloadCorpCode() {
   try {
     const response = await axios.get(url, {
       params: params,
-      responseType: "arraybuffer", // 바이너리 데이터로 응답을 받습니다.
+      responseType: "arraybuffer",
     });
 
     if (response.data.byteLength === 0) {
@@ -22,7 +22,6 @@ async function downloadCorpCode() {
       return;
     }
 
-    // ZIP 파일을 해제하여 XML 파일로 저장
     const bufferStream = require("stream").Readable.from(response.data);
 
     await new Promise((resolve, reject) => {
@@ -43,11 +42,10 @@ async function downloadCorpCode() {
 
     console.log("File downloaded and extracted successfully");
   } catch (error) {
-    throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 합니다.
+    throw error;
   }
 }
 
-// 메인 함수 실행
 async function downloadCorpCodeXML() {
   try {
     await downloadCorpCode();
@@ -56,5 +54,4 @@ async function downloadCorpCodeXML() {
   }
 }
 
-// 메인 함수 호출
 module.exports = { downloadCorpCodeXML };
